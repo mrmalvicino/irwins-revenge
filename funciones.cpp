@@ -2,26 +2,66 @@
 #include <random>
 using namespace std;
 #include "funciones.h"
-/*
-bool arena_cangrejo(){
 
+bool arena_cangrejo(int dado1, int dado2, int dado3){
+    // Determina si los dados tirados cumplen los requisitos para obtener la estatuilla.
+
+    bool rtn = true;
+
+    if( (dado1 % 2 == 0 && dado2 % 2 == 0 && dado3 % 2 == 0 && 0 < dado3) || (dado1 % 2 != 0 && dado2 % 2 != 0 && dado3 % 2 != 0 && 0 < dado3) ){
+        rtn = false;
+    }
+
+    return rtn;
 }
 
-bool tierra_hormiga(){
-    
+bool tierra_hormiga(int dado1, int dado2, int dado3){
+    // Determina si los dados tirados cumplen los requisitos para obtener la estatuilla.
+
+    bool rtn = false;
+
+    if( (dado1 < 5 && dado2 < 5) || (dado2 < 5 && dado3 < 5 && 0 < dado3) || (dado1 < 5 && dado3 < 5 && 0 < dado3) ){
+        rtn = true;
+    }
+
+    return rtn;
 }
 
-bool agua_medusa(){
-    
+bool agua_medusa(int dado1, int dado2, int dado3){
+    // Determina si los dados tirados cumplen los requisitos para obtener la estatuilla.
+
+    bool rtn = false;
+
+    if( (dado1 + dado2 == 7) || ((dado2 + dado3 == 7) && 0 < dado3) || ((dado1 + dado3 == 7) && 0 < dado3) ){
+        rtn = true;
+    }
+
+    return rtn;
 }
 
-bool aire_aguila(){
+bool aire_aguila(int dado1, int dado2, int dado3){
+    // Determina si los dados tirados cumplen los requisitos para obtener la estatuilla.
+
+    bool rtn = false;
     
+    if( (dado1 == 1 && dado2 == 10) || (dado1 == 10 && dado2 == 1) || (dado2 == 1 && dado3 == 10) || (dado2 == 10 && dado3 == 1) || (dado1 == 1 && dado3 == 10) || (dado1 == 10 && dado3 == 1) ){
+        rtn = true;
+    }
+
+    return rtn;
 }
 
-bool fuego_salamandra(){
+bool fuego_salamandra(int dado1, int dado2, int dado3){
+    // Determina si los dados tirados cumplen los requisitos para obtener la estatuilla.
+
+    bool rtn = false;
     
-}*/
+    if( dado1 == dado2 + 1 || dado2 == dado1 + 1 || ((dado2 == dado3 + 1) && 0 < dado3) || ((dado3 == dado2 + 1) && 0 < dado3) || ((dado1 == dado3 + 1) && 0 < dado3) || ((dado3 == dado1 + 1) && 0 < dado3) ){
+        rtn = true;
+    }
+
+    return rtn;
+}
 
 int turno_nuevo(int turno_actual, int cant_jugs){
     int turno_nuevo;
@@ -137,7 +177,7 @@ void fase_expedicion(string jugadores_menu[], int cant_jugs){
     // Jugar fase de expedicion.
 
     int const CANT_ESTATUILLAS = 5;
-    int estatuillas[CANT_ESTATUILLAS] = {0,1,0,1,2}; // Array que tiene en cada componente a quien pertenece la estatuilla o tiene cero si nadie la tiene
+    int estatuillas[CANT_ESTATUILLAS] = {0,0,0,0,0}; // Array que tiene en cada componente a quien pertenece la estatuilla o tiene cero si nadie la tiene
     
     int const CANT_JUGADORES = cant_jugs;
     int objetivos[CANT_JUGADORES];
@@ -169,11 +209,40 @@ void fase_expedicion(string jugadores_menu[], int cant_jugs){
                 dado1 = tirar_dado(10);
                 dado2 = tirar_dado(10);
                 cout << jugadores_fase_exp[turno_actual-1] << " tiro los dados " << dado1 << " y " << dado2 << endl;
+                
+                bool ests_coinciden[CANT_ESTATUILLAS] = {
+                arena_cangrejo(dado1, dado2, 0),
+                tierra_hormiga(dado1, dado2, 0),
+                agua_medusa(dado1, dado2, 0),
+                aire_aguila(dado1, dado2, 0),
+                fuego_salamandra(dado1, dado2, 0)};
+
+                int objetivo_elegido = objetivos[turno_actual - 1];
+
+                if(ests_coinciden[objetivo_elegido] == 1){
+                    estatuillas[objetivo_elegido] = turno_actual;
+                    cout << "El jugador " << turno_actual << " gana la estatuilla " << nombre_de_estatuilla(objetivo_elegido) << endl;
+                }
+
             } else if(estatuillas[4] != 0 && estatuillas[4] != turno_actual){ // Si otro tiene la salamandra el del turno tira 3 dados
                 dado1 = tirar_dado(10);
                 dado2 = tirar_dado(10);
                 dado3 = tirar_dado(10);
                 cout << jugadores_fase_exp[turno_actual-1] << " tiro los dados " << dado1 << ", " << dado2 << " y " << dado3 << endl;
+
+                bool ests_coinciden[CANT_ESTATUILLAS] = {
+                arena_cangrejo(dado1, dado2, dado3),
+                tierra_hormiga(dado1, dado2, dado3),
+                agua_medusa(dado1, dado2, dado3),
+                aire_aguila(dado1, dado2, dado3),
+                fuego_salamandra(dado1, dado2, dado3)};
+
+                int objetivo_elegido = objetivos[turno_actual - 1];
+
+                if(ests_coinciden[objetivo_elegido] == 1){
+                    estatuillas[objetivo_elegido] = turno_actual;
+                    cout << "El jugador " << turno_actual << " gana la estatuilla " << nombre_de_estatuilla(objetivo_elegido) << endl;
+                }
             }
 
             turno_actual = turno_nuevo(turno_actual, CANT_JUGADORES);

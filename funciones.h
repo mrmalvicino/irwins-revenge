@@ -1,6 +1,16 @@
 #include <iostream>
 using namespace std;
 
+bool arena_cangrejo(int dado1, int dado2, int dado3);
+
+bool tierra_hormiga(int dado1, int dado2, int dado3);
+
+bool agua_medusa(int dado1, int dado2, int dado3);
+
+bool aire_aguila(int dado1, int dado2, int dado3);
+
+bool fuego_salamandra(int dado1, int dado2, int dado3);
+
 int turno_nuevo(int turno_actual, int cant_jugs);
 
 string nombre_de_estatuilla(int numero_de_estat);
