@@ -3,6 +3,19 @@
 using namespace std;
 #include "funciones.h"
 
+int turno_nuevo(int turno_actual){
+    int turno_nuevo;
+    int const CANT_JUGADORES = 2;
+
+    if(turno_actual < CANT_JUGADORES){
+        turno_nuevo = turno_actual + 1;
+    } else{
+        turno_nuevo = 1;
+    }
+
+    return turno_nuevo;
+}
+
 string nombre_de_estatuilla(int numero_de_estat){
     // Devuelve el nombre de una de las estatuillas.
 
@@ -16,33 +29,30 @@ string nombre_de_estatuilla(int numero_de_estat){
     return nombres_de_estat[numero_de_estat];
 }
 
-void mostrar_inventario(string jugador1, string jugador2, int estatuillas[], int CANT_EST){
+void mostrar_inventario(string jugadores_fase_exp[], int cant_jugs, int estatuillas[], int cant_ests){
     // Muestra las estatuillas adquiridas por cada jugador hasta el momento.
 
-    cout << "Inventario de " << jugador1 << ":" << endl;
+    int const CANT_JUGADORES = cant_jugs;
+    int const CANT_ESTATUILLAS = cant_ests;
 
-    for(int i = 0; i < CANT_EST; i++){
-        if(estatuillas[i] == 1){
-            cout << "- " << nombre_de_estatuilla(i) << endl;
-        }
-    }
+    for(int i = 0; i < CANT_JUGADORES; i++){
+        cout << "Inventario de " << jugadores_fase_exp[i] << ":" << endl;
 
-    cout << "Inventario de " << jugador2 << ":" << endl;
-
-    for(int i = 0; i < CANT_EST; i++){
-        if(estatuillas[i] == 2){
-            cout << "- " << nombre_de_estatuilla(i) << endl;
+        for(int j = 0; j < CANT_ESTATUILLAS; j++){
+            if(estatuillas[j] == 1){
+                cout << "- " << nombre_de_estatuilla(j) << endl;
+            }
         }
     }
 }
 
-void elegir_estatuilla(int estatuillas[], int CANT_EST){
+void elegir_estatuilla(int estatuillas[], int CANT_ESTATUILLAS){
     // Mostrar las estatuillas disponibles para elegir como objetivo durante fase de expedicion.
 
     cout << "Elegir estatuilla objetivo:" << endl;
 
-    for(int i = 0; i < CANT_EST; i++){
-        if(estatuillas[i] != 0){
+    for(int i = 0; i < CANT_ESTATUILLAS; i++){
+        if(estatuillas[i] == 0){
             cout << i + 1 << " - " << nombre_de_estatuilla(i) << endl;
         }
     }
@@ -82,12 +92,12 @@ int jugador_inicial_exp(){
     return jugador_inicial;
 }
 
-bool fin_expedicion(int estatuillas[], int CANT_EST){
+bool fin_expedicion(int estatuillas[], int CANT_ESTATUILLAS){
     // Determina si se termina la fase de expedicion.
 
     bool fin = true;
 
-    for(int i = 0; i < CANT_EST; i++){
+    for(int i = 0; i < CANT_ESTATUILLAS; i++){
         if(estatuillas[i] == 0){
             fin = false;
         }
@@ -96,20 +106,33 @@ bool fin_expedicion(int estatuillas[], int CANT_EST){
     return fin;
 }
 
-void fase_expedicion(string jugador1, string jugador2){
+void fase_expedicion(string jugadores_menu[], int cant_jugs){
     // Jugar fase de expedicion.
 
-    int const CANT_EST = 5;
-    int estatuillas[CANT_EST] = {};
-    int turno_de = jugador_inicial_exp();
-    int objetivo1;
-    int objetivo2;
+    int const CANT_ESTATUILLAS = 5;
+    int estatuillas[CANT_ESTATUILLAS] = {};
+    
+    int const CANT_JUGADORES = cant_jugs;
+    int objetivos[CANT_JUGADORES];
+    string jugadores_fase_exp[CANT_JUGADORES];
+    
+    for(int i = 0; i < CANT_JUGADORES; i++){
+        jugadores_fase_exp[i] = jugadores_menu[i];
+    }
 
-    while(fin_expedicion(estatuillas, CANT_EST) == 0){
-        mostrar_inventario(jugador1, jugador2, estatuillas, CANT_EST);
-        elegir_estatuilla(estatuillas, CANT_EST);
-        // Jugador 1 elige objetivo
-        // Jugador 2 elige objetivo
+    int turno_actual = jugador_inicial_exp();
+
+    while(fin_expedicion(estatuillas, CANT_ESTATUILLAS) == 0){
+        mostrar_inventario(jugadores_fase_exp, CANT_JUGADORES, estatuillas, CANT_ESTATUILLAS);
+
+        for(int i = 0; i < CANT_JUGADORES; i++){
+            cout << "Turno de " << jugadores_fase_exp[turno_actual-1] << endl;
+            elegir_estatuilla(estatuillas, CANT_ESTATUILLAS);
+            cin >> objetivos[turno_actual-1];
+            turno_actual = turno_nuevo(turno_actual);
+        }
+
+
         // Jugador 1 tira 2 dados
         // informar si gano y actualizar vector estatuillas()
         // Jugador 2 tira 2 dados
@@ -117,20 +140,20 @@ void fase_expedicion(string jugador1, string jugador2){
     }
 }
 
-void menu_jugar(){
+void menu_jugar(int cant_jugs){
     // Opcion del menu.
-    
-    string jugador1;
-    string jugador2;
 
-    cout << "Ingrese nombre de jugador 1:" << endl;
-    cin.ignore(); // Ignora el enter de cin >> entrada en menu();
-    getline(cin, jugador1);
+    int const CANT_JUGADORES = cant_jugs;
+    string jugadores_menu[CANT_JUGADORES];
 
-    cout << "Ingrese nombre de jugador 2:" << endl;
-    getline(cin, jugador2);
+    cin.ignore(); // Ignora el enter de cin >> seleccion en menu();
 
-    fase_expedicion(jugador1, jugador2);
+    for(int i = 0; i < CANT_JUGADORES; i++){
+        cout << "Ingrese nombre del jugador " << i + 1 << ":" << endl;
+        getline(cin, jugadores_menu[i]);
+    }
+
+    fase_expedicion(jugadores_menu, CANT_JUGADORES);
 }
 
 void menu_estadisticas(){
@@ -152,25 +175,27 @@ void menu(){
     // Menu principal.
 
     int seleccion;
-    cout << "-------------------------" << endl;
+    cout << "-----------------------" << endl;
     cout << "IRWIN'S REVENGE" << endl;
-    cout << "-------------------------" << endl;
-    cout << "1 - JUGAR (DOS JUGADORES)" << endl;
+    cout << "-----------------------" << endl;
+    cout << "1 - JUGAR (2 JUGADORES)" << endl;
     cout << "2 - ESTADISTICAS" << endl;
     cout << "3 - CREDITOS" << endl;
-    cout << "-------------------------" << endl;
+    cout << "-----------------------" << endl;
     cout << "0 - SALIR" << endl;
-    cout << "-------------------------" << endl;
+    cout << "-----------------------" << endl;
 
     do{
         cin >> seleccion;
     } while (seleccion < 0 || 3 < seleccion);
 
+    int const CANT_JUGADORES = 2;
+
     switch(seleccion){
         case 0:
             break;
         case 1:
-            menu_jugar();
+            menu_jugar(CANT_JUGADORES);
             break;
         case 2:
             menu_estadisticas();
