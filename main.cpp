@@ -7,6 +7,11 @@ int main(){
 }
 
 /*
+COMPILAR Y CORRER PRUEBA DE ESCRITORIO:
 g++ -o ./bin/main main.cpp funciones.cpp
 ./bin/main < ./bin/test.txt
+
+COMPILAR Y EJECUTAR:
+g++ -o ./bin/main main.cpp funciones.cpp
+./bin/main
 */
