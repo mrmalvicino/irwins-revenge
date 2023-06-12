@@ -3,6 +3,29 @@
 using namespace std;
 #include "funciones.h"
 
+    bool guardar_inventario(int dado1, int dado2, int dado3, int turno_actual, int objetivos[]){
+    // Guarda en el inventario de un jugador la estatuilla objetivo si los dados cumplen el requisito de obtencion.
+
+    int const CANT_ESTATUILLAS = 5;
+
+    bool ests_coinciden[CANT_ESTATUILLAS] = {
+        arena_cangrejo(dado1, dado2, dado3),
+        tierra_hormiga(dado1, dado2, dado3),
+        agua_medusa(dado1, dado2, dado3),
+        aire_aguila(dado1, dado2, dado3),
+        fuego_salamandra(dado1, dado2, dado3)};
+
+    int objetivo_elegido = objetivos[turno_actual - 1] - 1;
+    int rtn = false;
+
+    if(ests_coinciden[objetivo_elegido] == 1){
+        rtn = true;
+        cout << "El jugador " << turno_actual << " gana la estatuilla " << nombre_de_estatuilla(objetivo_elegido) << endl;
+    }
+
+    return rtn;
+    }
+
 bool arena_cangrejo(int dado1, int dado2, int dado3){
     // Determina si los dados tirados cumplen los requisitos para obtener la estatuilla.
 
@@ -180,7 +203,7 @@ void fase_expedicion(string jugadores_menu[], int cant_jugs){
     int estatuillas[CANT_ESTATUILLAS] = {0,0,0,0,0}; // Array que tiene en cada componente a quien pertenece la estatuilla o tiene cero si nadie la tiene
     
     int const CANT_JUGADORES = cant_jugs;
-    int objetivos[CANT_JUGADORES];
+    int objetivos[CANT_JUGADORES]; // Usuario guarda valores entre 1 y 5
     string jugadores_fase_exp[CANT_JUGADORES];
     
     for(int i = 0; i < CANT_JUGADORES; i++){
@@ -203,55 +226,31 @@ void fase_expedicion(string jugadores_menu[], int cant_jugs){
         }
 
         for(int i = 0; i < CANT_JUGADORES; i++){ // Jugadores tiran dados para conseguir estatuillas objetivo
+            int objetivo_elegido = objetivos[turno_actual - 1] - 1;
             cout << "Turno de " << jugadores_fase_exp[turno_actual - 1] << endl;
             
             if(estatuillas[4] == 0 || estatuillas[4] == turno_actual){ // Si nadie tiene la salamandra o la tiene el del turno, este tira dos dados
                 dado1 = tirar_dado(10);
                 dado2 = tirar_dado(10);
-                cout << jugadores_fase_exp[turno_actual-1] << " tiro los dados " << dado1 << " y " << dado2 << endl;
+                cout << jugadores_fase_exp[turno_actual-1] << " tira los dados " << dado1 << " y " << dado2 << endl;
                 
-                bool ests_coinciden[CANT_ESTATUILLAS] = {
-                arena_cangrejo(dado1, dado2, 0),
-                tierra_hormiga(dado1, dado2, 0),
-                agua_medusa(dado1, dado2, 0),
-                aire_aguila(dado1, dado2, 0),
-                fuego_salamandra(dado1, dado2, 0)};
-
-                int objetivo_elegido = objetivos[turno_actual - 1];
-
-                if(ests_coinciden[objetivo_elegido] == 1){
+                if(guardar_inventario(dado1, dado2, 0, turno_actual, objetivos) == 1){
                     estatuillas[objetivo_elegido] = turno_actual;
-                    cout << "El jugador " << turno_actual << " gana la estatuilla " << nombre_de_estatuilla(objetivo_elegido) << endl;
                 }
 
             } else if(estatuillas[4] != 0 && estatuillas[4] != turno_actual){ // Si otro tiene la salamandra el del turno tira 3 dados
                 dado1 = tirar_dado(10);
                 dado2 = tirar_dado(10);
                 dado3 = tirar_dado(10);
-                cout << jugadores_fase_exp[turno_actual-1] << " tiro los dados " << dado1 << ", " << dado2 << " y " << dado3 << endl;
-
-                bool ests_coinciden[CANT_ESTATUILLAS] = {
-                arena_cangrejo(dado1, dado2, dado3),
-                tierra_hormiga(dado1, dado2, dado3),
-                agua_medusa(dado1, dado2, dado3),
-                aire_aguila(dado1, dado2, dado3),
-                fuego_salamandra(dado1, dado2, dado3)};
-
-                int objetivo_elegido = objetivos[turno_actual - 1];
-
-                if(ests_coinciden[objetivo_elegido] == 1){
+                cout << jugadores_fase_exp[turno_actual-1] << " tira los dados " << dado1 << ", " << dado2 << " y " << dado3 << endl;
+                
+                if(guardar_inventario(dado1, dado2, dado3, turno_actual, objetivos) == 1){
                     estatuillas[objetivo_elegido] = turno_actual;
-                    cout << "El jugador " << turno_actual << " gana la estatuilla " << nombre_de_estatuilla(objetivo_elegido) << endl;
                 }
             }
 
             turno_actual = turno_nuevo(turno_actual, CANT_JUGADORES);
         }
-
-        // Jugador 1 tira 2 dados
-        // informar si gano y actualizar vector estatuillas()
-        // Jugador 2 tira 2 dados
-        // informar si gano y actualizar vector estatuillas()
     }
 }
 

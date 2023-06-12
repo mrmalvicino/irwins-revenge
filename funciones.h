@@ -1,6 +1,8 @@
 #include <iostream>
 using namespace std;
 
+bool guardar_inventario(int dado1, int dado2, int dado3, int turno_actual, int objetivos[]);
+
 bool arena_cangrejo(int dado1, int dado2, int dado3);
 
 bool tierra_hormiga(int dado1, int dado2, int dado3);
