@@ -3,7 +3,7 @@
 using namespace std;
 #include "funciones.h"
 
-    bool guardar_inventario(int dado1, int dado2, int dado3, int turno_actual, int objetivos[]){
+bool guardar_inventario(int dado1, int dado2, int dado3, int turno_actual, int objetivos[]){
     // Guarda en el inventario de un jugador la estatuilla objetivo si los dados cumplen el requisito de obtencion.
 
     int const CANT_ESTATUILLAS = 5;
@@ -20,7 +20,7 @@ using namespace std;
 
     if(ests_coinciden[objetivo_elegido] == 1){
         rtn = true;
-        cout << "El jugador " << turno_actual << " gana la estatuilla " << nombre_de_estatuilla(objetivo_elegido) << endl;
+        cout << "El jugador " << turno_actual << " gana la " << nombre_de_estatuilla(objetivo_elegido) << endl;
     }
 
     return rtn;
@@ -215,37 +215,57 @@ void fase_expedicion(string jugadores_menu[], int cant_jugs){
     int dado2;
     int dado3;
 
+    int turnos_perdidos = 0;
+
     while(fin_expedicion(estatuillas, CANT_ESTATUILLAS) == 0){
         mostrar_inventario(jugadores_fase_exp, CANT_JUGADORES, estatuillas, CANT_ESTATUILLAS);
 
-        for(int i = 0; i < CANT_JUGADORES; i++){ // Jugadores eligen objetivos
-            cout << "Turno de " << jugadores_fase_exp[turno_actual - 1] << endl;
-            elegir_estatuillas_disponibles(estatuillas, CANT_ESTATUILLAS);
-            cin >> objetivos[turno_actual - 1];
+        for(int i = 0; i < CANT_JUGADORES; i++){ // CADA JUGADOR ELIGE OBJETIVO
+            if(estatuillas[2] == turno_actual && turnos_perdidos < 3){ // Si el jugador tiene la medusa, no elige objetivo por 3 turnos
+                cout << jugadores_fase_exp[turno_actual - 1] << " tiene la medusa y pierde los siguientes " << 3 - turnos_perdidos << " turnos."  << endl;
+            } else{
+                cout << "Turno de " << jugadores_fase_exp[turno_actual - 1] << endl;
+                elegir_estatuillas_disponibles(estatuillas, CANT_ESTATUILLAS);
+                cin >> objetivos[turno_actual - 1];
+            }
+
             turno_actual = turno_nuevo(turno_actual, CANT_JUGADORES);
         }
 
-        for(int i = 0; i < CANT_JUGADORES; i++){ // Jugadores tiran dados para conseguir estatuillas objetivo
+        for(int i = 0; i < CANT_JUGADORES; i++){ // CADA JUGADOR TIRA DADOS PARA CONSEGUIR ESTATUILLA OBJETIVO
             int objetivo_elegido = objetivos[turno_actual - 1] - 1;
-            cout << "Turno de " << jugadores_fase_exp[turno_actual - 1] << endl;
-            
-            if(estatuillas[4] == 0 || estatuillas[4] == turno_actual){ // Si nadie tiene la salamandra o la tiene el del turno, este tira dos dados
-                dado1 = tirar_dado(10);
-                dado2 = tirar_dado(10);
-                cout << jugadores_fase_exp[turno_actual-1] << " tira los dados " << dado1 << " y " << dado2 << endl;
-                
-                if(guardar_inventario(dado1, dado2, 0, turno_actual, objetivos) == 1){
-                    estatuillas[objetivo_elegido] = turno_actual;
-                }
+            int tiros;
 
-            } else if(estatuillas[4] != 0 && estatuillas[4] != turno_actual){ // Si otro tiene la salamandra el del turno tira 3 dados
-                dado1 = tirar_dado(10);
-                dado2 = tirar_dado(10);
-                dado3 = tirar_dado(10);
-                cout << jugadores_fase_exp[turno_actual-1] << " tira los dados " << dado1 << ", " << dado2 << " y " << dado3 << endl;
-                
-                if(guardar_inventario(dado1, dado2, dado3, turno_actual, objetivos) == 1){
-                    estatuillas[objetivo_elegido] = turno_actual;
+            cout << "Turno de " << jugadores_fase_exp[turno_actual - 1] << endl;
+
+            if(estatuillas[2] == turno_actual && turnos_perdidos < 3){ // Si el jugador tiene la medusa, no tira por 3 turnos
+                tiros = 0;
+                turnos_perdidos ++;
+            } else if(estatuillas[3] != 0 && estatuillas[3] != turno_actual){ // Si el rival tiene el aguila, tirar dos veces
+                tiros = 2;
+            } else{
+                tiros = 1;
+            }
+
+            for(int i = 0; i < tiros; i++){ // Tiro de dados por jugador
+                if(estatuillas[4] == 0 || estatuillas[4] == turno_actual){ // Si nadie tiene la salamandra o la tiene el del turno, este tira dos dados
+                    dado1 = tirar_dado(10);
+                    dado2 = tirar_dado(10);
+                    cout << jugadores_fase_exp[turno_actual-1] << " tira los dados " << dado1 << " y " << dado2 << endl;
+                    
+                    if(estatuillas[objetivo_elegido] == 0 && guardar_inventario(dado1, dado2, 0, turno_actual, objetivos) == 1){
+                        estatuillas[objetivo_elegido] = turno_actual;
+                    }
+
+                } else if(estatuillas[4] != 0 && estatuillas[4] != turno_actual){ // Si otro tiene la salamandra el del turno tira 3 dados
+                    dado1 = tirar_dado(10);
+                    dado2 = tirar_dado(10);
+                    dado3 = tirar_dado(10);
+                    cout << jugadores_fase_exp[turno_actual-1] << " tira los dados " << dado1 << ", " << dado2 << " y " << dado3 << endl;
+                    
+                    if(estatuillas[objetivo_elegido] == 0 && guardar_inventario(dado1, dado2, dado3, turno_actual, objetivos) == 1){
+                        estatuillas[objetivo_elegido] = turno_actual;
+                    }
                 }
             }
 
