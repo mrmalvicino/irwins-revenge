@@ -1,7 +1,11 @@
 #include <iostream>
 using namespace std;
 
-bool guardar_inventario(int dado1, int dado2, int dado3, int turno_actual, int objetivos[]);
+int jugador_inicial_final(int estatuillas[], int cant_ests, int cant_jugs);
+
+bool fin_final(int dados_ordenados[], int cant_dds);
+
+void fase_final(string jugadores_fase_exp[], int cant_jugs, int estatuillas[], int cant_ests);
 
 bool arena_cangrejo(int dado1, int dado2, int dado3);
 
@@ -12,6 +16,8 @@ bool agua_medusa(int dado1, int dado2, int dado3);
 bool aire_aguila(int dado1, int dado2, int dado3);
 
 bool fuego_salamandra(int dado1, int dado2, int dado3);
+
+bool guardar_inventario(int dado1, int dado2, int dado3, int turno_actual, int objetivos[]);
 
 int turno_nuevo(int turno_actual, int cant_jugs);
 

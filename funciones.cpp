@@ -1,30 +1,72 @@
 #include <iostream>
 #include <random>
+#include <ctime>
 using namespace std;
 #include "funciones.h"
 
-bool guardar_inventario(int dado1, int dado2, int dado3, int turno_actual, int objetivos[]){
-    // Guarda en el inventario de un jugador la estatuilla objetivo si los dados cumplen el requisito de obtencion.
+int jugador_inicial_final(int estatuillas[], int cant_ests, int cant_jugs){
+    // Determina el jugador que comienza la fase de expedicion.
 
-    int const CANT_ESTATUILLAS = 5;
+    int const CANT_ESTATUILLAS = cant_ests;
+    int const CANT_JUGADORES = cant_jugs;
 
-    bool ests_coinciden[CANT_ESTATUILLAS] = {
-        arena_cangrejo(dado1, dado2, dado3),
-        tierra_hormiga(dado1, dado2, dado3),
-        agua_medusa(dado1, dado2, dado3),
-        aire_aguila(dado1, dado2, dado3),
-        fuego_salamandra(dado1, dado2, dado3)};
+    int jugador_inicial = 1;
+    int contador_ests = 0;
 
-    int objetivo_elegido = objetivos[turno_actual - 1] - 1;
-    int rtn = false;
-
-    if(ests_coinciden[objetivo_elegido] == 1){
-        rtn = true;
-        cout << "El jugador " << turno_actual << " gana la " << nombre_de_estatuilla(objetivo_elegido) << endl;
+    for(int i = 0; i < CANT_ESTATUILLAS; i++){
+        if(estatuillas[i] == jugador_inicial){
+            contador_ests ++;
+        }
     }
 
-    return rtn;
+    if(contador_ests <= CANT_ESTATUILLAS / CANT_JUGADORES){
+            jugador_inicial ++;
+        }
+
+    return jugador_inicial;
+}
+
+bool fin_final(int dados_ordenados[], int cant_dds){
+    // Determina si se termina la fase final.
+
+    int const TAM_ESCALERA = 5;
+    int escalera1[TAM_ESCALERA] = {1,2,3,4,5};
+    int escalera2[TAM_ESCALERA] = {2,3,4,5,6};
+    bool fin = false;
+    
+    return fin;
+}
+
+void fase_final(string jugadores_fase_exp[], int cant_jugs, int estatuillas[], int cant_ests){
+    // Jugar fase final.
+
+    int const CANT_ESTATUILLAS = cant_ests;
+    int const CANT_JUGADORES = cant_jugs;
+
+    string jugadores_final[CANT_JUGADORES];
+
+    for(int i = 0; i < CANT_JUGADORES; i++){
+        jugadores_final[i] = jugadores_fase_exp[i];
     }
+
+    int turno_actual = jugador_inicial_final(estatuillas, cant_ests, cant_jugs);
+    int const CANT_DADOS = 5;
+    int const CANT_CARAS = 6;
+    int dados[CANT_DADOS] = {};
+
+    cout << endl << "¡Comienza la fase final!" << endl;
+
+    while(0 == 0){
+        cout << endl << "Turno de " << jugadores_final[turno_actual - 1] << endl;
+
+        for(int i = 0; i < CANT_DADOS; i++){ // CADA JUGADOR TIRA LOS DADOS
+            dados[i] = tirar_dado(CANT_CARAS);
+            cout << "Tira " << dados[i] << endl;
+        }
+
+        turno_actual = turno_nuevo(turno_actual, CANT_JUGADORES);
+    }
+}
 
 bool arena_cangrejo(int dado1, int dado2, int dado3){
     // Determina si los dados tirados cumplen los requisitos para obtener la estatuilla.
@@ -86,6 +128,29 @@ bool fuego_salamandra(int dado1, int dado2, int dado3){
     return rtn;
 }
 
+bool guardar_inventario(int dado1, int dado2, int dado3, int turno_actual, int objetivos[]){
+    // Guarda en el inventario de un jugador la estatuilla objetivo si los dados cumplen el requisito de obtencion.
+
+    int const CANT_ESTATUILLAS = 5;
+
+    bool ests_coinciden[CANT_ESTATUILLAS] = {
+        arena_cangrejo(dado1, dado2, dado3),
+        tierra_hormiga(dado1, dado2, dado3),
+        agua_medusa(dado1, dado2, dado3),
+        aire_aguila(dado1, dado2, dado3),
+        fuego_salamandra(dado1, dado2, dado3)};
+
+    int objetivo_elegido = objetivos[turno_actual - 1] - 1;
+    int rtn = false;
+
+    if(ests_coinciden[objetivo_elegido] == 1){
+        rtn = true;
+        cout << endl << "El jugador " << turno_actual << " gana la " << nombre_de_estatuilla(objetivo_elegido) << endl;
+    }
+
+    return rtn;
+}
+
 int turno_nuevo(int turno_actual, int cant_jugs){
     int turno_nuevo;
     int const CANT_JUGADORES = cant_jugs;
@@ -119,6 +184,8 @@ void mostrar_inventario(string jugadores_fase_exp[], int cant_jugs, int estatuil
     int const CANT_JUGADORES = cant_jugs;
     int const CANT_ESTATUILLAS = cant_ests;
 
+    cout << endl;
+
     for(int i = 0; i < CANT_JUGADORES; i++){
         cout << "Inventario de " << jugadores_fase_exp[i] << ":" << endl;
 
@@ -128,6 +195,8 @@ void mostrar_inventario(string jugadores_fase_exp[], int cant_jugs, int estatuil
             }
         }
     }
+
+    cout << endl;
 }
 
 void elegir_estatuillas_disponibles(int estatuillas[], int cant_ests){
@@ -147,6 +216,11 @@ void elegir_estatuillas_disponibles(int estatuillas[], int cant_ests){
 int tirar_dado(int cant_caras){
     // Devuelve un numero aleatorio con probabilidad 1/caras.
 
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> aleatorio(1, cant_caras);
+
+    /*
     int const CANT_CARAS = cant_caras;
     int numeros[CANT_CARAS];
 
@@ -154,10 +228,12 @@ int tirar_dado(int cant_caras){
       numeros[i] = i + 1;
     }
 
+    srand(time(0));
     int indice = rand() % 10;
     int aleatorio = numeros[indice];
+    */
 
-    return aleatorio;
+    return aleatorio(gen);
 }
 
 int jugador_inicial_exp(){
@@ -200,9 +276,9 @@ void fase_expedicion(string jugadores_menu[], int cant_jugs){
     // Jugar fase de expedicion.
 
     int const CANT_ESTATUILLAS = 5;
-    int estatuillas[CANT_ESTATUILLAS] = {0,0,0,0,0}; // Array que tiene en cada componente a quien pertenece la estatuilla o tiene cero si nadie la tiene
-    
     int const CANT_JUGADORES = cant_jugs;
+
+    int estatuillas[CANT_ESTATUILLAS] = {1,2,2,1,2}; // Array que tiene en cada componente a quien pertenece la estatuilla o tiene cero si nadie la tiene
     int objetivos[CANT_JUGADORES]; // Usuario guarda valores entre 1 y 5
     string jugadores_fase_exp[CANT_JUGADORES];
     
@@ -214,15 +290,18 @@ void fase_expedicion(string jugadores_menu[], int cant_jugs){
     int dado1;
     int dado2;
     int dado3;
-
+    int const TIROS_MALDICION_AGUILA = 2;
+    int const TURNOS_MALDICION_MEDUSA = 3;
     int turnos_perdidos = 0;
+
+    cout << endl << "¡Comienza la fase de expedicion!" << endl;
 
     while(fin_expedicion(estatuillas, CANT_ESTATUILLAS) == 0){
         mostrar_inventario(jugadores_fase_exp, CANT_JUGADORES, estatuillas, CANT_ESTATUILLAS);
 
         for(int i = 0; i < CANT_JUGADORES; i++){ // CADA JUGADOR ELIGE OBJETIVO
-            if(estatuillas[2] == turno_actual && turnos_perdidos < 3){ // Si el jugador tiene la medusa, no elige objetivo por 3 turnos
-                cout << jugadores_fase_exp[turno_actual - 1] << " tiene la medusa y pierde los siguientes " << 3 - turnos_perdidos << " turnos."  << endl;
+            if(estatuillas[2] == turno_actual && turnos_perdidos < TURNOS_MALDICION_MEDUSA){ // Si el jugador tiene la medusa, no elige objetivo por 3 turnos
+                cout << jugadores_fase_exp[turno_actual - 1] << " tiene la medusa y pierde los siguientes " << TURNOS_MALDICION_MEDUSA - turnos_perdidos << " turnos."  << endl;
             } else{
                 cout << "Turno de " << jugadores_fase_exp[turno_actual - 1] << endl;
                 elegir_estatuillas_disponibles(estatuillas, CANT_ESTATUILLAS);
@@ -238,11 +317,11 @@ void fase_expedicion(string jugadores_menu[], int cant_jugs){
 
             cout << "Turno de " << jugadores_fase_exp[turno_actual - 1] << endl;
 
-            if(estatuillas[2] == turno_actual && turnos_perdidos < 3){ // Si el jugador tiene la medusa, no tira por 3 turnos
+            if(estatuillas[2] == turno_actual && turnos_perdidos < TURNOS_MALDICION_MEDUSA){ // Si el jugador tiene la medusa, no tira por 3 turnos
                 tiros = 0;
                 turnos_perdidos ++;
-            } else if(estatuillas[3] != 0 && estatuillas[3] != turno_actual){ // Si el rival tiene el aguila, tirar dos veces
-                tiros = 2;
+            } else if(estatuillas[3] != 0 && estatuillas[3] != turno_actual){ // Si el rival tiene el aguila, tiene 2 tiros
+                tiros = TIROS_MALDICION_AGUILA;
             } else{
                 tiros = 1;
             }
@@ -272,6 +351,8 @@ void fase_expedicion(string jugadores_menu[], int cant_jugs){
             turno_actual = turno_nuevo(turno_actual, CANT_JUGADORES);
         }
     }
+
+    fase_final(jugadores_fase_exp, CANT_JUGADORES, estatuillas, CANT_ESTATUILLAS);
 }
 
 void menu_jugar(int cant_jugs){
