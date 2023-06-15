@@ -1,8 +1,19 @@
 #include <iostream>
 #include <random>
-#include <ctime>
 using namespace std;
 #include "funciones.h"
+
+bool turno_portador_medusa(int portador, int turno_actual){
+    // Determina si es el turno del portador de la medusa.
+
+    bool rtn = false;
+
+    if(portador == turno_actual){
+        rtn = true;
+    }
+
+    return rtn;
+}
 
 int jugador_inicial_final(int estatuillas[], int cant_ests, int cant_jugs){
     // Determina el jugador que comienza la fase de expedicion.
@@ -26,14 +37,46 @@ int jugador_inicial_final(int estatuillas[], int cant_ests, int cant_jugs){
     return jugador_inicial;
 }
 
-bool fin_final(int dados_ordenados[], int cant_dds){
+bool fin_de_fase_fin(int dados[], int cant_dds, bool tiene_medusa){
     // Determina si se termina la fase final.
 
-    int const TAM_ESCALERA = 5;
-    int escalera1[TAM_ESCALERA] = {1,2,3,4,5};
-    int escalera2[TAM_ESCALERA] = {2,3,4,5,6};
-    bool fin = false;
-    
+    int const CANT_DADOS = cant_dds;
+    int dados_ordenados[CANT_DADOS];
+
+    for(int i = 0; i < CANT_DADOS; i++){ // Copiar vector
+        dados_ordenados[i] = dados[i];
+    }
+
+    int aux;
+
+    for(int i = 0; i < CANT_DADOS; i++){ // Ordenar de menor a mayor
+        for(int j = 0; j < CANT_DADOS - 1; j++){
+            if(dados_ordenados[j+1] < dados_ordenados[j]){
+                aux = dados_ordenados[j+1];
+                dados_ordenados[j+1] = dados_ordenados[j];
+                dados_ordenados[j] = aux;
+            }
+        }
+    }
+
+    bool fin;
+
+    if(tiene_medusa == true){
+        fin = true;
+        for(int i = 0; i < CANT_DADOS - 1; i++){
+            if(dados_ordenados[i] != dados_ordenados[i+1]){
+                fin = false;
+            }
+        }
+    } else{
+        fin = true;
+        for(int i = 0; i < CANT_DADOS - 1; i++){
+            if(dados_ordenados[i] + 1 != dados_ordenados[i+1]){
+                fin = false;
+            }
+        }
+    }
+
     return fin;
 }
 
@@ -50,22 +93,24 @@ void fase_final(string jugadores_fase_exp[], int cant_jugs, int estatuillas[], i
     }
 
     int turno_actual = jugador_inicial_final(estatuillas, cant_ests, cant_jugs);
+    bool tiene_medusa;
     int const CANT_DADOS = 5;
     int const CANT_CARAS = 6;
     int dados[CANT_DADOS] = {};
 
     cout << endl << "¡Comienza la fase final!" << endl;
 
-    while(0 == 0){
+    do{ // Tirar mientras no salga escalera
         cout << endl << "Turno de " << jugadores_final[turno_actual - 1] << endl;
 
-        for(int i = 0; i < CANT_DADOS; i++){ // CADA JUGADOR TIRA LOS DADOS
+        for(int i = 0; i < CANT_DADOS; i++){ // Cada jugador tira los dados
             dados[i] = tirar_dado(CANT_CARAS);
             cout << "Tira " << dados[i] << endl;
         }
 
+        tiene_medusa = turno_portador_medusa(estatuillas[2], turno_actual);
         turno_actual = turno_nuevo(turno_actual, CANT_JUGADORES);
-    }
+    } while(fin_de_fase_fin(dados, CANT_DADOS, tiene_medusa) == false);
 }
 
 bool arena_cangrejo(int dado1, int dado2, int dado3){
@@ -220,19 +265,6 @@ int tirar_dado(int cant_caras){
     std::mt19937 gen(rd());
     std::uniform_int_distribution<int> aleatorio(1, cant_caras);
 
-    /*
-    int const CANT_CARAS = cant_caras;
-    int numeros[CANT_CARAS];
-
-    for(int i = 0; i < CANT_CARAS; i++){
-      numeros[i] = i + 1;
-    }
-
-    srand(time(0));
-    int indice = rand() % 10;
-    int aleatorio = numeros[indice];
-    */
-
     return aleatorio(gen);
 }
 
@@ -257,7 +289,7 @@ int jugador_inicial_exp(){
     return jugador_inicial;
 }
 
-bool fin_expedicion(int estatuillas[], int cant_ests){
+bool fin_de_fase_exp(int estatuillas[], int cant_ests){
     // Determina si se termina la fase de expedicion.
 
     int CANT_ESTATUILLAS = cant_ests;
@@ -296,7 +328,7 @@ void fase_expedicion(string jugadores_menu[], int cant_jugs){
 
     cout << endl << "¡Comienza la fase de expedicion!" << endl;
 
-    while(fin_expedicion(estatuillas, CANT_ESTATUILLAS) == 0){
+    while(fin_de_fase_exp(estatuillas, CANT_ESTATUILLAS) == false){
         mostrar_inventario(jugadores_fase_exp, CANT_JUGADORES, estatuillas, CANT_ESTATUILLAS);
 
         for(int i = 0; i < CANT_JUGADORES; i++){ // CADA JUGADOR ELIGE OBJETIVO

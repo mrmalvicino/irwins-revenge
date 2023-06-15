@@ -1,9 +1,11 @@
 #include <iostream>
 using namespace std;
 
+bool turno_portador_medusa(int portador, int turno_actual);
+
 int jugador_inicial_final(int estatuillas[], int cant_ests, int cant_jugs);
 
-bool fin_final(int dados_ordenados[], int cant_dds);
+bool fin_de_fase_fin(int dados_ordenados[], int cant_dds, bool tiene_medusa);
 
 void fase_final(string jugadores_fase_exp[], int cant_jugs, int estatuillas[], int cant_ests);
 
@@ -31,7 +33,7 @@ int tirar_dado(int cant_caras);
 
 int jugador_inicial_exp();
 
-bool fin_expedicion(int estatuillas[], int cant_ests);
+bool fin_de_fase_exp(int estatuillas[], int cant_ests);
 
 void fase_expedicion(string jugadores_menu[], int cant_jugs);
 
