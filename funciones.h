@@ -3,7 +3,7 @@ using namespace std;
 
 int jugador_inicial_final(int estatuillas[], int cant_ests, int cant_jugs);
 
-bool fin_de_fase_fin(int dados_ordenados[], int cant_dds, int portador_de_medusa, int turno_actual);
+bool fin_de_fase_fin(int dados_ordenados[], int cant_dds, int turno_actual, int portador_de_medusa, int portador_de_salamandra);
 
 void fase_final(string jugadores_fase_exp[], int cant_jugs, int estatuillas[], int cant_ests);
 

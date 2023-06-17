@@ -25,13 +25,13 @@ int jugador_inicial_final(int estatuillas[], int cant_ests, int cant_jugs){
     return jugador_inicial;
 }
 
-bool fin_de_fase_fin(int dados[], int cant_dds, int portador_de_medusa, int turno_actual){
+bool fin_de_fase_fin(int dados[], int cant_dds, int turno_actual, int portador_de_medusa, int portador_de_salamandra){
     // Determina si se termina la fase final.
 
     int const CANT_DADOS = cant_dds;
     int dados_ordenados[CANT_DADOS];
 
-    for(int i = 0; i < CANT_DADOS; i++){ // Copiar vector
+    for(int i = 0; i < CANT_DADOS; i++){ // Copiar vector de dados para ser ordenado
         dados_ordenados[i] = dados[i];
     }
 
@@ -47,25 +47,51 @@ bool fin_de_fase_fin(int dados[], int cant_dds, int portador_de_medusa, int turn
         }
     }
 
-    bool fin;
+    int vueltas_sin_dar = 0;
 
-    if(portador_de_medusa == turno_actual){
-        fin = true;
+    if(turno_actual == portador_de_salamandra){ // Si tiene salamandra, mover el primer dado duplicado al final del array
+        vueltas_sin_dar = 1;
         for(int i = 0; i < CANT_DADOS - 1; i++){
-            if(dados_ordenados[i] != dados_ordenados[i+1]){
-                fin = false;
-            }
-        }
-    } else{
-        fin = true;
-        for(int i = 0; i < CANT_DADOS - 1; i++){
-            if(dados_ordenados[i] + 1 != dados_ordenados[i+1]){
-                fin = false;
+            if(dados_ordenados[i] == dados_ordenados[i+1]){
+                for(int j = i; j < CANT_DADOS - i; j++){
+                    dados_ordenados[j+1] = dados_ordenados[j+2];
+                }
+                dados_ordenados[CANT_DADOS-1] = dados_ordenados[i];
+                i = CANT_DADOS - 1;
             }
         }
     }
 
-    return fin;
+    bool gana_por_escalera = true;
+    bool gana_por_medusa = false;
+    bool gana_fase_final = false;
+
+    for(int i = 0; i < CANT_DADOS; i++){
+        cout << dados_ordenados[i] << endl;
+    }
+
+    for(int i = 0; i < CANT_DADOS - 1 - vueltas_sin_dar; i++){ // Gana por escalera (de 5 o de 4 segun vueltas_sin_dar sea 0 o 1)
+        if(dados_ordenados[i] + 1 != dados_ordenados[i+1]){
+            gana_por_escalera = false;
+        }
+    }
+
+    if(turno_actual == portador_de_medusa){ // Gana por medusa
+        gana_por_medusa = true;
+        for(int i = 0; i < CANT_DADOS - 1; i++){
+            if(dados_ordenados[i] != dados_ordenados[i+1]){
+                gana_por_medusa = false;
+            }
+        }
+    }
+
+    if(gana_por_escalera == true){
+        gana_fase_final = true;
+    } else if(gana_por_medusa == true){
+        gana_fase_final = true;
+    }
+
+    return gana_fase_final;
 }
 
 void fase_final(string jugadores_fase_exp[], int cant_jugs, int estatuillas[], int cant_ests){
@@ -98,7 +124,7 @@ void fase_final(string jugadores_fase_exp[], int cant_jugs, int estatuillas[], i
 
         ganador_fase_final = turno_actual;
         turno_actual = turno_nuevo(turno_actual, CANT_JUGADORES);
-    } while(fin_de_fase_fin(dados, CANT_DADOS, estatuillas[2], ganador_fase_final) == false);
+    } while(fin_de_fase_fin(dados, CANT_DADOS, ganador_fase_final, estatuillas[2], estatuillas[4]) == false);
 }
 
 bool arena_cangrejo(int dado1, int dado2, int dado3){
