@@ -3,18 +3,6 @@
 using namespace std;
 #include "funciones.h"
 
-bool turno_portador_medusa(int portador, int turno_actual){
-    // Determina si es el turno del portador de la medusa.
-
-    bool rtn = false;
-
-    if(portador == turno_actual){
-        rtn = true;
-    }
-
-    return rtn;
-}
-
 int jugador_inicial_final(int estatuillas[], int cant_ests, int cant_jugs){
     // Determina el jugador que comienza la fase de expedicion.
 
@@ -37,7 +25,7 @@ int jugador_inicial_final(int estatuillas[], int cant_ests, int cant_jugs){
     return jugador_inicial;
 }
 
-bool fin_de_fase_fin(int dados[], int cant_dds, bool tiene_medusa){
+bool fin_de_fase_fin(int dados[], int cant_dds, int portador_de_medusa, int turno_actual){
     // Determina si se termina la fase final.
 
     int const CANT_DADOS = cant_dds;
@@ -61,7 +49,7 @@ bool fin_de_fase_fin(int dados[], int cant_dds, bool tiene_medusa){
 
     bool fin;
 
-    if(tiene_medusa == true){
+    if(portador_de_medusa == turno_actual){
         fin = true;
         for(int i = 0; i < CANT_DADOS - 1; i++){
             if(dados_ordenados[i] != dados_ordenados[i+1]){
@@ -93,10 +81,10 @@ void fase_final(string jugadores_fase_exp[], int cant_jugs, int estatuillas[], i
     }
 
     int turno_actual = jugador_inicial_final(estatuillas, cant_ests, cant_jugs);
-    bool tiene_medusa;
     int const CANT_DADOS = 5;
     int const CANT_CARAS = 6;
     int dados[CANT_DADOS] = {};
+    int ganador_fase_final;
 
     cout << endl << "¡Comienza la fase final!" << endl;
 
@@ -108,9 +96,9 @@ void fase_final(string jugadores_fase_exp[], int cant_jugs, int estatuillas[], i
             cout << "Tira " << dados[i] << endl;
         }
 
-        tiene_medusa = turno_portador_medusa(estatuillas[2], turno_actual);
+        ganador_fase_final = turno_actual;
         turno_actual = turno_nuevo(turno_actual, CANT_JUGADORES);
-    } while(fin_de_fase_fin(dados, CANT_DADOS, tiene_medusa) == false);
+    } while(fin_de_fase_fin(dados, CANT_DADOS, estatuillas[2], ganador_fase_final) == false);
 }
 
 bool arena_cangrejo(int dado1, int dado2, int dado3){
@@ -310,7 +298,7 @@ void fase_expedicion(string jugadores_menu[], int cant_jugs){
     int const CANT_ESTATUILLAS = 5;
     int const CANT_JUGADORES = cant_jugs;
 
-    int estatuillas[CANT_ESTATUILLAS] = {1,2,2,1,2}; // Array que tiene en cada componente a quien pertenece la estatuilla o tiene cero si nadie la tiene
+    int estatuillas[CANT_ESTATUILLAS] = {1,1,2,2,2}; // Array que tiene en cada componente a quien pertenece la estatuilla o tiene cero si nadie la tiene
     int objetivos[CANT_JUGADORES]; // Usuario guarda valores entre 1 y 5
     string jugadores_fase_exp[CANT_JUGADORES];
     
