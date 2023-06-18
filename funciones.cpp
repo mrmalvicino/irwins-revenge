@@ -66,10 +66,6 @@ bool fin_de_fase_fin(int dados[], int cant_dds, int turno_actual, int portador_d
     bool gana_por_medusa = false;
     bool gana_fase_final = false;
 
-    for(int i = 0; i < CANT_DADOS; i++){
-        cout << dados_ordenados[i] << endl;
-    }
-
     for(int i = 0; i < CANT_DADOS - 1 - vueltas_sin_dar; i++){ // Gana por escalera (de 5 o de 4 segun vueltas_sin_dar sea 0 o 1)
         if(dados_ordenados[i] + 1 != dados_ordenados[i+1]){
             gana_por_escalera = false;
@@ -89,6 +85,20 @@ bool fin_de_fase_fin(int dados[], int cant_dds, int turno_actual, int portador_d
         gana_fase_final = true;
     } else if(gana_por_medusa == true){
         gana_fase_final = true;
+    }
+
+    if(gana_fase_final == true){
+        cout << "El jugador " << turno_actual << " gana la fase final con los dados ";
+        for(int i = 0; i < CANT_DADOS; i++){
+            cout << dados[i];
+            if(i < CANT_DADOS - 2){
+                 cout << ", ";
+            } else if(i < CANT_DADOS - 1){
+                cout << " y ";
+            } else{
+                cout << "." << endl;
+            }
+        }
     }
 
     return gana_fase_final;
@@ -120,6 +130,23 @@ void fase_final(string jugadores_fase_exp[], int cant_jugs, int estatuillas[], i
         for(int i = 0; i < CANT_DADOS; i++){ // Cada jugador tira los dados
             dados[i] = tirar_dado(CANT_CARAS);
             cout << "Tira " << dados[i] << endl;
+        }
+
+        int cambio_dado;
+
+        if(turno_actual == estatuillas[3]){ // Si tiene aguila, puede elegir un dado y cambiarle el valor
+            cout << "El jugador tiene la estatuilla del aguila. Elegir un dado para cambiar su valor. Ingresar 0 en caso de no querer cambiar ningun dado." << endl;
+            cin >> cambio_dado;
+
+            if(cambio_dado != 0){
+                for(int i = 0; i < CANT_DADOS; i++){
+                    if(dados[i] == cambio_dado){
+                        cout << "ingresar nuevo valor para el dado " << dados[i] << ":" << endl;
+                        cin >> dados[i];
+                        i = CANT_DADOS;
+                    }
+                }
+            }
         }
 
         ganador_fase_final = turno_actual;

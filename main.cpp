@@ -3,9 +3,7 @@ using namespace std;
 #include "funciones.h"
 
 int main(){
-    //menu();
-    int arr[5] = {2,4,6,3,1};
-    cout << fin_de_fase_fin(arr, 5, 1, 2, 1)<<endl;
+    menu();
 }
 
 /*
