@@ -121,6 +121,10 @@ void fase_final(string jugadores_fase_exp[], int cant_jugs, int estatuillas[], i
     int const CANT_CARAS = 6;
     int dados[CANT_DADOS] = {};
     int ganador_fase_final;
+    int cambio_dado;
+    int reemplazo;
+    cout << "El jugador " << estatuillas[1] << " tiene la estatuilla de la hormiga. Elegir un numero del 1 al 6 para luego usar como reemplazo." << endl;
+    cin >> reemplazo;
 
     cout << endl << "¡Comienza la fase final!" << endl;
 
@@ -132,9 +136,22 @@ void fase_final(string jugadores_fase_exp[], int cant_jugs, int estatuillas[], i
             cout << "Tira " << dados[i] << endl;
         }
 
-        int cambio_dado;
+        if(turno_actual == estatuillas[1]){ // Si tiene hormiga, puede elegir un dado y cambiarlo por el reemplazo
+            cout << "El jugador tiene la estatuilla de la hormiga. Elegir un dado para reemplazarlo por " << reemplazo << ". ";
+            cout << "Ingresar 0 en caso de no querer cambiar ningun dado." << endl;
+            cin >> cambio_dado;
 
-        if(turno_actual == estatuillas[3]){ // Si tiene aguila, puede elegir un dado y cambiarle el valor
+            if(cambio_dado != 0){
+                for(int i = 0; i < CANT_DADOS; i++){
+                    if(dados[i] == cambio_dado){
+                        dados[i] = reemplazo;
+                        i = CANT_DADOS;
+                    }
+                }
+            }
+        }
+
+        if(turno_actual == estatuillas[3]){ // Si tiene aguila, puede elegir un dado y asignarle un nuevo valor
             cout << "El jugador tiene la estatuilla del aguila. Elegir un dado para cambiar su valor. Ingresar 0 en caso de no querer cambiar ningun dado." << endl;
             cin >> cambio_dado;
 
@@ -351,7 +368,7 @@ void fase_expedicion(string jugadores_menu[], int cant_jugs){
     int const CANT_ESTATUILLAS = 5;
     int const CANT_JUGADORES = cant_jugs;
 
-    int estatuillas[CANT_ESTATUILLAS] = {1,1,2,2,2}; // Array que tiene en cada componente a quien pertenece la estatuilla o tiene cero si nadie la tiene
+    int estatuillas[CANT_ESTATUILLAS] = {1,1,1,2,2}; // Array que tiene en cada componente a quien pertenece la estatuilla o tiene cero si nadie la tiene
     int objetivos[CANT_JUGADORES]; // Usuario guarda valores entre 1 y 5
     string jugadores_fase_exp[CANT_JUGADORES];
     
