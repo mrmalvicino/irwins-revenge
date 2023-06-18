@@ -121,10 +121,11 @@ void fase_final(string jugadores_fase_exp[], int cant_jugs, int estatuillas[], i
     int const CANT_CARAS = 6;
     int dados[CANT_DADOS] = {};
     int ganador_fase_final;
+    bool primer_tiro_cangrejo = 0;
     int cambio_dado;
-    int reemplazo;
+    int reemplazo_hormiga;
     cout << "El jugador " << estatuillas[1] << " tiene la estatuilla de la hormiga. Elegir un numero del 1 al 6 para luego usar como reemplazo." << endl;
-    cin >> reemplazo;
+    cin >> reemplazo_hormiga;
 
     cout << endl << "¡Comienza la fase final!" << endl;
 
@@ -137,14 +138,14 @@ void fase_final(string jugadores_fase_exp[], int cant_jugs, int estatuillas[], i
         }
 
         if(turno_actual == estatuillas[1]){ // Si tiene hormiga, puede elegir un dado y cambiarlo por el reemplazo
-            cout << "El jugador tiene la estatuilla de la hormiga. Elegir un dado para reemplazarlo por " << reemplazo << ". ";
+            cout << "El jugador tiene la estatuilla de la hormiga. Elegir un dado para reemplazarlo por " << reemplazo_hormiga << ". ";
             cout << "Ingresar 0 en caso de no querer cambiar ningun dado." << endl;
             cin >> cambio_dado;
 
             if(cambio_dado != 0){
                 for(int i = 0; i < CANT_DADOS; i++){
                     if(dados[i] == cambio_dado){
-                        dados[i] = reemplazo;
+                        dados[i] = reemplazo_hormiga;
                         i = CANT_DADOS;
                     }
                 }
@@ -167,7 +168,13 @@ void fase_final(string jugadores_fase_exp[], int cant_jugs, int estatuillas[], i
         }
 
         ganador_fase_final = turno_actual;
-        turno_actual = turno_nuevo(turno_actual, CANT_JUGADORES);
+
+        if(primer_tiro_cangrejo == false && turno_actual == estatuillas[0] && fin_de_fase_fin(dados, CANT_DADOS, turno_actual, estatuillas[2], estatuillas[4]) == false){ // Si tiene cangrejo, tira dos veces la primera vez
+            primer_tiro_cangrejo = 1;
+            cout << "El jugador " << turno_actual << " tira nuevamente por tener la estatuilla del cangrejo." << endl;
+        } else{
+            turno_actual = turno_nuevo(turno_actual, CANT_JUGADORES);
+        }
     } while(fin_de_fase_fin(dados, CANT_DADOS, ganador_fase_final, estatuillas[2], estatuillas[4]) == false);
 }
 
