@@ -1,11 +1,13 @@
 #include <iostream>
 using namespace std;
 
+void puntos_de_victoria(string jugadores_final[], int cant_jugs, int estatuillas[], int cant_ests, int ganador_fase_fin, int intentos[][5]);
+
 int jugador_inicial_final(int estatuillas[], int cant_ests, int cant_jugs);
 
 bool fin_de_fase_fin(int dados_ordenados[], int cant_dds, int turno_actual, int portador_de_medusa, int portador_de_salamandra);
 
-void fase_final(string jugadores_fase_exp[], int cant_jugs, int estatuillas[], int cant_ests);
+void fase_final(string jugadores_fase_exp[], int cant_jugs, int estatuillas[], int cant_ests, int intentos[][5]);
 
 bool arena_cangrejo(int dado1, int dado2, int dado3);
 

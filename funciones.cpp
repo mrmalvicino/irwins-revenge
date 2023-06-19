@@ -3,6 +3,72 @@
 using namespace std;
 #include "funciones.h"
 
+void puntos_de_victoria(string jugadores_final[], int cant_jugs, int estatuillas[], int cant_ests, int ganador_fase_fin, int intentos[][5]){
+    // Suma los puntos de victoria para determinar el ganador.
+
+    int const CANT_JUGADORES = 2;
+    int const CANT_ESTATUILLAS = cant_ests;
+    int puntos_de_victoria[CANT_JUGADORES] = {}; // Array acumulador de puntos. Cada componente tiene los puntos de cada jugador.
+    int const PDV_POR_ESTAT = 5;
+    int const PDV_POR_EST_PP = 10;
+    int const PDV_POR_GANADOR = 15;
+    int const PDV_POR_GAN_PP = 50;
+    int const PDV_POR_EST_RIVAL = 3;
+    int const PDV_POR_LANZAM = 1;
+
+    for(int i = 0; i < CANT_ESTATUILLAS; i++){ // OBTIENE ESTATUILLA
+        puntos_de_victoria[estatuillas[i] - 1] =+ PDV_POR_ESTAT;
+        cout << "El jugador " << estatuillas[i] << " gana " << PDV_POR_ESTAT << " puntos por haber obtenido la estatuilla " << nombre_de_estatuilla(i) << "." << endl;
+    }
+
+    for(int i = 0; i < CANT_JUGADORES; i++){ // OBTIENE ESTATUILLA EN PRIMER INTENTO
+        for(int j = 0; j < CANT_ESTATUILLAS; j++){
+            if(intentos[i][j] == 1 && estatuillas[j] == i + 1){
+                puntos_de_victoria[i] =+ PDV_POR_EST_PP;
+                cout << "El jugador " << i + 1 << " gana " << PDV_POR_EST_PP << " puntos por haber obtenido la estatuilla " << nombre_de_estatuilla(j) << " en el primer intento." << endl;
+            }
+        }
+    }
+
+    puntos_de_victoria[ganador_fase_fin - 1] =+ PDV_POR_GANADOR; // GANADOR FASE FINAL
+    cout << "El jugador " << ganador_fase_fin << " gana " << PDV_POR_GANADOR << " puntos por haber ganado la fase final." << endl;
+
+    for(int i = 0; i < CANT_JUGADORES; i++){ // GANADOR FASE FINAL SIN ESTATUILLAS
+        bool gano_sin_ests = true;
+        
+        for(int j = 0; j < CANT_ESTATUILLAS; j++){
+            if(ganador_fase_fin != i || estatuillas[j] == i){
+                gano_sin_ests = false;
+            }
+        }
+
+        if(gano_sin_ests == true){
+            puntos_de_victoria[i] =+ PDV_POR_GAN_PP;
+            cout << "El jugador " << i + 1 << " gana " << PDV_POR_GAN_PP << " puntos por haber ganado la fase final sin estatuillas en su inventario." << endl;
+        }
+    }
+
+    for(int i = 0; i < CANT_JUGADORES; i++){ // RIVAL OBTIENE ESTATUILLA
+        for(int j = 0; j < CANT_ESTATUILLAS; j++){
+            if(estatuillas[j] != i + 1){
+                puntos_de_victoria[i] =- PDV_POR_EST_RIVAL;
+                cout << "El jugador " << i + 1 << " pierde " << PDV_POR_EST_RIVAL << " puntos por no haber ganado la " << nombre_de_estatuilla(j) << "." << endl;
+            }
+        }
+    }
+
+    for(int i = 0; i < CANT_JUGADORES; i++){ // LANZADOR FASE FINAL
+        if(jugador_inicial_final(estatuillas, CANT_ESTATUILLAS, CANT_JUGADORES) == i){
+            puntos_de_victoria[i] =- PDV_POR_LANZAM;
+            cout << "El jugador " << i + 1 << " pierde " << PDV_POR_LANZAM << " punto por haber lanzado en fase final." << endl;
+        }
+    }
+
+    for(int i = 0; i < CANT_JUGADORES; i++){
+        cout << "El jugador " << i + 1 << " obtuvo " << puntos_de_victoria[i] << " puntos de victoria." << endl;
+    }
+}
+
 int jugador_inicial_final(int estatuillas[], int cant_ests, int cant_jugs){
     // Determina el jugador que comienza la fase de expedicion.
 
@@ -64,7 +130,7 @@ bool fin_de_fase_fin(int dados[], int cant_dds, int turno_actual, int portador_d
 
     bool gana_por_escalera = true;
     bool gana_por_medusa = false;
-    bool gana_fase_final = false;
+    bool gana_fase_fin = false;
 
     for(int i = 0; i < CANT_DADOS - 1 - vueltas_sin_dar; i++){ // Gana por escalera (de 5 o de 4 segun vueltas_sin_dar sea 0 o 1)
         if(dados_ordenados[i] + 1 != dados_ordenados[i+1]){
@@ -82,12 +148,12 @@ bool fin_de_fase_fin(int dados[], int cant_dds, int turno_actual, int portador_d
     }
 
     if(gana_por_escalera == true){
-        gana_fase_final = true;
+        gana_fase_fin = true;
     } else if(gana_por_medusa == true){
-        gana_fase_final = true;
+        gana_fase_fin = true;
     }
 
-    if(gana_fase_final == true){
+    if(gana_fase_fin == true){
         cout << "El jugador " << turno_actual << " gana la fase final con los dados ";
         for(int i = 0; i < CANT_DADOS; i++){
             cout << dados[i];
@@ -101,10 +167,10 @@ bool fin_de_fase_fin(int dados[], int cant_dds, int turno_actual, int portador_d
         }
     }
 
-    return gana_fase_final;
+    return gana_fase_fin;
 }
 
-void fase_final(string jugadores_fase_exp[], int cant_jugs, int estatuillas[], int cant_ests){
+void fase_final(string jugadores_fase_exp[], int cant_jugs, int estatuillas[], int cant_ests, int intentos[][5]){
     // Jugar fase final.
 
     int const CANT_ESTATUILLAS = cant_ests;
@@ -120,7 +186,7 @@ void fase_final(string jugadores_fase_exp[], int cant_jugs, int estatuillas[], i
     int const CANT_DADOS = 5;
     int const CANT_CARAS = 6;
     int dados[CANT_DADOS] = {};
-    int ganador_fase_final;
+    int ganador_fase_fin;
     bool primer_tiro_cangrejo = 0;
     int cambio_dado;
     int reemplazo_hormiga;
@@ -167,15 +233,17 @@ void fase_final(string jugadores_fase_exp[], int cant_jugs, int estatuillas[], i
             }
         }
 
-        ganador_fase_final = turno_actual;
+        ganador_fase_fin = turno_actual;
 
-        if(primer_tiro_cangrejo == false && turno_actual == estatuillas[0] && fin_de_fase_fin(dados, CANT_DADOS, turno_actual, estatuillas[2], estatuillas[4]) == false){ // Si tiene cangrejo, tira dos veces la primera vez
+        if(primer_tiro_cangrejo == false && turno_actual == estatuillas[0] && fin_de_fase_fin(dados, CANT_DADOS, turno_actual, estatuillas[2], estatuillas[4]) == false){ // Si tiene cangrejo, no cambia el turno porque tira el jugador nuevamente
             primer_tiro_cangrejo = 1;
             cout << "El jugador " << turno_actual << " tira nuevamente por tener la estatuilla del cangrejo." << endl;
         } else{
             turno_actual = turno_nuevo(turno_actual, CANT_JUGADORES);
         }
-    } while(fin_de_fase_fin(dados, CANT_DADOS, ganador_fase_final, estatuillas[2], estatuillas[4]) == false);
+    } while(fin_de_fase_fin(dados, CANT_DADOS, ganador_fase_fin, estatuillas[2], estatuillas[4]) == false);
+
+    puntos_de_victoria(jugadores_final, CANT_JUGADORES, estatuillas, CANT_ESTATUILLAS, ganador_fase_fin, intentos);
 }
 
 bool arena_cangrejo(int dado1, int dado2, int dado3){
@@ -376,20 +444,28 @@ void fase_expedicion(string jugadores_menu[], int cant_jugs){
     int const CANT_JUGADORES = cant_jugs;
 
     int estatuillas[CANT_ESTATUILLAS] = {1,1,1,2,2}; // Array que tiene en cada componente a quien pertenece la estatuilla o tiene cero si nadie la tiene
-    int objetivos[CANT_JUGADORES]; // Usuario guarda valores entre 1 y 5
+    int objetivos[CANT_JUGADORES]; // Array que tiene el objetivo de cada jugador por turno
     string jugadores_fase_exp[CANT_JUGADORES];
     
     for(int i = 0; i < CANT_JUGADORES; i++){
         jugadores_fase_exp[i] = jugadores_menu[i];
     }
 
-    int turno_actual = jugador_inicial_exp();
+    int turno_actual = jugador_inicial_exp(); // Numero de jugador al que le corresponde el turno (entero mayor que cero)
     int dado1;
     int dado2;
     int dado3;
     int const TIROS_MALDICION_AGUILA = 2;
     int const TURNOS_MALDICION_MEDUSA = 3;
     int turnos_perdidos = 0;
+
+    int intentos[CANT_JUGADORES][CANT_ESTATUILLAS]; // Matriz que contiene las veces que un jugador eligio una estatuilla como objetivo. Cada fila representa un jugador. Cada columna representa una estatuilla.
+
+    for(int i = 0; i < CANT_JUGADORES; i++){
+        for(int j = 0; j < CANT_ESTATUILLAS; j++){
+            intentos[i][j] = 0;
+        }
+    }
 
     cout << endl << "¡Comienza la fase de expedicion!" << endl;
 
@@ -403,6 +479,7 @@ void fase_expedicion(string jugadores_menu[], int cant_jugs){
                 cout << "Turno de " << jugadores_fase_exp[turno_actual - 1] << endl;
                 elegir_estatuillas_disponibles(estatuillas, CANT_ESTATUILLAS);
                 cin >> objetivos[turno_actual - 1];
+                intentos[turno_actual - 1][objetivos[turno_actual - 1] - 1] ++; // Para contar puntos de victoria al final
             }
 
             turno_actual = turno_nuevo(turno_actual, CANT_JUGADORES);
@@ -449,7 +526,7 @@ void fase_expedicion(string jugadores_menu[], int cant_jugs){
         }
     }
 
-    fase_final(jugadores_fase_exp, CANT_JUGADORES, estatuillas, CANT_ESTATUILLAS);
+    fase_final(jugadores_fase_exp, CANT_JUGADORES, estatuillas, CANT_ESTATUILLAS, intentos);
 }
 
 void menu_jugar(int cant_jugs){
