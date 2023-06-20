@@ -3,11 +3,8 @@
 using namespace std;
 #include "funciones.h"
 
-void puntos_de_victoria(string nombres_jugadores[], int cant_jugs, int estatuillas[], int cant_ests, int ganador_fase_fin, int intentos[][5]){
+void puntos_de_victoria(string nombres_jugadores[], int const CANT_JUGADORES, int estatuillas[], int const CANT_ESTATUILLAS, int ganador_fase_fin, int intentos[][5]){
     // Suma los puntos de victoria para determinar el ganador.
-
-    int const CANT_JUGADORES = 2;
-    int const CANT_ESTATUILLAS = cant_ests;
 
     int const PDV_POR_ESTAT = 5;
     int const PDV_POR_EST_PP = 10;
@@ -15,8 +12,11 @@ void puntos_de_victoria(string nombres_jugadores[], int cant_jugs, int estatuill
     int const PDV_POR_GAN_PP = 50;
     int const PDV_POR_EST_RIVAL = 3;
     int const PDV_POR_LANZAM = 1;
-    
-    int puntos_de_victoria[CANT_JUGADORES] = {}; // Array acumulador de puntos. Cada componente tiene los puntos de cada jugador.
+    int puntos_de_victoria[CANT_JUGADORES]; // Array acumulador de puntos. Cada componente tiene los puntos de cada jugador.
+
+    for(int i = 0; i < CANT_JUGADORES; i++){
+        puntos_de_victoria[i] = 0;
+    }
 
     for(int i = 0; i < CANT_ESTATUILLAS; i++){ // OBTIENE ESTATUILLA
         puntos_de_victoria[estatuillas[i] - 1] += PDV_POR_ESTAT;
@@ -71,11 +71,8 @@ void puntos_de_victoria(string nombres_jugadores[], int cant_jugs, int estatuill
     }
 }
 
-int jugador_inicial_final(int estatuillas[], int cant_ests, int cant_jugs){
+int jugador_inicial_final(int estatuillas[], int const CANT_ESTATUILLAS, int const CANT_JUGADORES){
     // Determina el jugador que comienza la fase de expedicion.
-
-    int const CANT_ESTATUILLAS = cant_ests;
-    int const CANT_JUGADORES = cant_jugs;
 
     int jugador_inicial = 1;
     int contador_ests = 0;
@@ -169,11 +166,8 @@ bool fin_de_fase_fin(int dados_final[], int cant_dds, int turno_actual, int port
     return gana_fase_fin;
 }
 
-void fase_final(string nombres_jugadores[], int cant_jugs, int estatuillas[], int cant_ests, int intentos[][5]){ //HARDCODEO
+void fase_final(string nombres_jugadores[], int const CANT_JUGADORES, int estatuillas[], int const CANT_ESTATUILLAS, int intentos[][5]){ //HARDCODEO
     // Jugar fase final.
-
-    int const CANT_ESTATUILLAS = cant_ests;
-    int const CANT_JUGADORES = cant_jugs;
     
     int const CANT_DADOS_FINAL = 5;
     int const CANT_CARAS_FINAL = 6;
@@ -182,7 +176,7 @@ void fase_final(string nombres_jugadores[], int cant_jugs, int estatuillas[], in
     bool primer_tiro_cangrejo = false;
     int cambio_dado;
     int reemplazo_hormiga;
-    int turno_actual = jugador_inicial_final(estatuillas, cant_ests, cant_jugs);
+    int turno_actual = jugador_inicial_final(estatuillas, CANT_ESTATUILLAS, CANT_JUGADORES);
 
     cout << "El jugador " << estatuillas[1] << " tiene la estatuilla de la hormiga. Elegir un numero del 1 al 6 para luego usar como reemplazo." << endl;
     cin >> reemplazo_hormiga;
@@ -321,11 +315,10 @@ bool guardar_inventario(int dados_exp[], int objetivos[], int turno_actual){
     return rtn;
 }
 
-int turno_nuevo(int turno_actual, int cant_jugs){
+int turno_nuevo(int turno_actual, int const CANT_JUGADORES){
     // Alterna el turno entre los jugadores a partir del numero de turno actual.
 
     int turno_nuevo;
-    int const CANT_JUGADORES = cant_jugs;
 
     if(turno_actual < CANT_JUGADORES){
         turno_nuevo = turno_actual + 1;
@@ -350,11 +343,8 @@ string nombre_de_estatuilla(int numero_de_estat){
     return nombres_de_estat[numero_de_estat];
 }
 
-void mostrar_inventario(string nombres_jugadores[], int cant_jugs, int estatuillas[], int cant_ests){
+void mostrar_inventario(string nombres_jugadores[], int const CANT_JUGADORES, int estatuillas[], int const CANT_ESTATUILLAS){
     // Muestra las estatuillas adquiridas por cada jugador hasta el momento.
-
-    int const CANT_JUGADORES = cant_jugs;
-    int const CANT_ESTATUILLAS = cant_ests;
 
     cout << endl;
 
@@ -371,10 +361,8 @@ void mostrar_inventario(string nombres_jugadores[], int cant_jugs, int estatuill
     cout << endl;
 }
 
-void elegir_estatuillas_disponibles(int estatuillas[], int cant_ests){
+void elegir_estatuillas_disponibles(int estatuillas[], int const CANT_ESTATUILLAS){
     // Mostrar las estatuillas disponibles para elegir como objetivo durante fase de expedicion.
-
-    int CANT_ESTATUILLAS = cant_ests;
 
     cout << "Elegir estatuilla objetivo:" << endl;
 
@@ -416,10 +404,9 @@ int jugador_inicial_exp(){
     return jugador_inicial;
 }
 
-bool fin_de_fase_exp(int estatuillas[], int cant_ests){
+bool fin_de_fase_exp(int estatuillas[], int const CANT_ESTATUILLAS){
     // Determina si se termina la fase de expedicion.
 
-    int CANT_ESTATUILLAS = cant_ests;
     bool rtn = true;
 
     for(int i = 0; i < CANT_ESTATUILLAS; i++){
@@ -431,10 +418,9 @@ bool fin_de_fase_exp(int estatuillas[], int cant_ests){
     return rtn;
 }
 
-void fase_expedicion(string nombres_jugadores[], int cant_jugs){
+void fase_expedicion(string nombres_jugadores[], int const CANT_JUGADORES){
     // Jugar fase de expedicion.
 
-    int const CANT_JUGADORES = cant_jugs;
     int const CANT_ESTATUILLAS = 5;
     int const CANT_DADOS_EXP = 3;
     int const CANT_CARAS_EXP = 10;
@@ -507,10 +493,9 @@ void fase_expedicion(string nombres_jugadores[], int cant_jugs){
     fase_final(nombres_jugadores, CANT_JUGADORES, estatuillas, CANT_ESTATUILLAS, intentos);
 }
 
-void menu_jugar(int cant_jugs){
+void menu_jugar(int const CANT_JUGADORES){
     // Opcion del menu.
 
-    int const CANT_JUGADORES = cant_jugs;
     string nombres_jugadores[CANT_JUGADORES];
 
     cin.ignore(); // Ignora el enter de cin >> seleccion en menu();
