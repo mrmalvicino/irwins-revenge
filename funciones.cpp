@@ -166,7 +166,7 @@ bool fin_de_fase_fin(int dados_final[], int cant_dds, int turno_actual, int port
     return gana_fase_fin;
 }
 
-void fase_final(string nombres_jugadores[], int const CANT_JUGADORES, int estatuillas[], int const CANT_ESTATUILLAS, int intentos[][5]){ //HARDCODEO
+void fase_final(string nombres_jugadores[], int const CANT_JUGADORES, int estatuillas[], int const CANT_ESTATUILLAS, int intentos[][5]){ // Dimension hardcodeada para no usar constantes globales
     // Jugar fase final.
     
     int const CANT_DADOS_FINAL = 5;
