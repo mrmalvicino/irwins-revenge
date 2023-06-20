@@ -41,6 +41,135 @@ void dibujar_dado(int valor_del_dado, int posicion){
             rlutil::locate(15 + LARGO * posicion, 10);
             cout << "░░" << endl;
             break;
+
+        case 4:
+            rlutil::locate(3 + LARGO * posicion, 4);
+            cout << "░░" << endl;
+
+            rlutil::locate(3 + LARGO * posicion, 10);
+            cout << "░░" << endl;
+
+            rlutil::locate(15 + LARGO * posicion, 4);
+            cout << "░░" << endl;
+
+            rlutil::locate(15 + LARGO * posicion, 10);
+            cout << "░░" << endl;
+            break;
+
+        case 5:
+            rlutil::locate(3 + LARGO * posicion, 4);
+            cout << "░░" << endl;
+
+            rlutil::locate(3 + LARGO * posicion, 10);
+            cout << "░░" << endl;
+
+            rlutil::locate(9 + LARGO * posicion, 7);
+            cout << "░░" << endl;
+
+            rlutil::locate(15 + LARGO * posicion, 4);
+            cout << "░░" << endl;
+
+            rlutil::locate(15 + LARGO * posicion, 10);
+            cout << "░░" << endl;
+            break;
+
+        case 6:
+            rlutil::locate(3 + LARGO * posicion, 4);
+            cout << "░░" << endl;
+
+            rlutil::locate(3 + LARGO * posicion, 10);
+            cout << "░░" << endl;
+
+            rlutil::locate(9 + LARGO * posicion, 4);
+            cout << "░░" << endl;
+
+            rlutil::locate(9 + LARGO * posicion, 10);
+            cout << "░░" << endl;
+
+            rlutil::locate(15 + LARGO * posicion, 4);
+            cout << "░░" << endl;
+
+            rlutil::locate(15 + LARGO * posicion, 10);
+            cout << "░░" << endl;
+            break;
+        
+        case 7:
+            rlutil::locate(3 + LARGO * posicion, 4);
+            cout << "░░" << endl;
+
+            rlutil::locate(3 + LARGO * posicion, 10);
+            cout << "░░" << endl;
+
+            rlutil::locate(9 + LARGO * posicion, 4);
+            cout << "░░" << endl;
+
+            rlutil::locate(9 + LARGO * posicion, 7);
+            cout << "░░" << endl;
+
+            rlutil::locate(9 + LARGO * posicion, 10);
+            cout << "░░" << endl;
+
+            rlutil::locate(15 + LARGO * posicion, 4);
+            cout << "░░" << endl;
+
+            rlutil::locate(15 + LARGO * posicion, 10);
+            cout << "░░" << endl;
+            break;
+
+        case 8:
+            rlutil::locate(3 + LARGO * posicion, 4);
+            cout << "░░" << endl;
+
+            rlutil::locate(3 + LARGO * posicion, 7);
+            cout << "░░" << endl;
+
+            rlutil::locate(3 + LARGO * posicion, 10);
+            cout << "░░" << endl;
+
+            rlutil::locate(9 + LARGO * posicion, 4);
+            cout << "░░" << endl;
+
+            rlutil::locate(9 + LARGO * posicion, 10);
+            cout << "░░" << endl;
+
+            rlutil::locate(15 + LARGO * posicion, 4);
+            cout << "░░" << endl;
+
+            rlutil::locate(15 + LARGO * posicion, 7);
+            cout << "░░" << endl;
+
+            rlutil::locate(15 + LARGO * posicion, 10);
+            cout << "░░" << endl;
+            break;
+
+        case 9:
+            rlutil::locate(3 + LARGO * posicion, 4);
+            cout << "░░" << endl;
+
+            rlutil::locate(3 + LARGO * posicion, 7);
+            cout << "░░" << endl;
+
+            rlutil::locate(3 + LARGO * posicion, 10);
+            cout << "░░" << endl;
+
+            rlutil::locate(9 + LARGO * posicion, 4);
+            cout << "░░" << endl;
+
+            rlutil::locate(9 + LARGO * posicion, 7);
+            cout << "░░" << endl;
+
+            rlutil::locate(9 + LARGO * posicion, 10);
+            cout << "░░" << endl;
+
+            rlutil::locate(15 + LARGO * posicion, 4);
+            cout << "░░" << endl;
+
+            rlutil::locate(15 + LARGO * posicion, 7);
+            cout << "░░" << endl;
+
+            rlutil::locate(15 + LARGO * posicion, 10);
+            cout << "░░" << endl;
+            break;
     }
 
     for(int y = 0; y < 5; y++){
