@@ -20,14 +20,14 @@ void puntos_de_victoria(string nombres_jugadores[], int const CANT_JUGADORES, in
 
     for(int i = 0; i < CANT_ESTATUILLAS; i++){ // OBTIENE ESTATUILLA
         puntos_de_victoria[estatuillas[i] - 1] += PDV_POR_ESTAT;
-        cout << "El jugador " << estatuillas[i] << " gana " << PDV_POR_ESTAT << " puntos por haber obtenido la estatuilla de " << nombre_de_estatuilla(i) << "." << endl;
+        cout << "El jugador " << estatuillas[i] << " gana " << PDV_POR_ESTAT << " puntos por haber obtenido la estatuilla de " << nombre_de_estatuilla(i, CANT_ESTATUILLAS) << "." << endl;
     }
 
     for(int i = 0; i < CANT_JUGADORES; i++){ // OBTIENE ESTATUILLA EN PRIMER INTENTO
         for(int j = 0; j < CANT_ESTATUILLAS; j++){
             if(intentos[i][j] == 1 && estatuillas[j] == i + 1){
                 puntos_de_victoria[i] += PDV_POR_EST_PP;
-                cout << "El jugador " << i + 1 << " gana " << PDV_POR_EST_PP << " puntos por haber obtenido la estatuilla de " << nombre_de_estatuilla(j) << " en el primer intento." << endl;
+                cout << "El jugador " << i + 1 << " gana " << PDV_POR_EST_PP << " puntos por haber obtenido la estatuilla de " << nombre_de_estatuilla(j, CANT_ESTATUILLAS) << " en el primer intento." << endl;
             }
         }
     }
@@ -54,7 +54,7 @@ void puntos_de_victoria(string nombres_jugadores[], int const CANT_JUGADORES, in
         for(int j = 0; j < CANT_ESTATUILLAS; j++){
             if(estatuillas[j] != i + 1){
                 puntos_de_victoria[i] -= PDV_POR_EST_RIVAL;
-                cout << "El jugador " << i + 1 << " pierde " << PDV_POR_EST_RIVAL << " puntos por no haber ganado la estatuilla de " << nombre_de_estatuilla(j) << "." << endl;
+                cout << "El jugador " << i + 1 << " pierde " << PDV_POR_EST_RIVAL << " puntos por no haber ganado la estatuilla de " << nombre_de_estatuilla(j, CANT_ESTATUILLAS) << "." << endl;
             }
         }
     }
@@ -294,22 +294,21 @@ bool fuego_salamandra(int dado1, int dado2, int dado3){
     return rtn;
 }
 
-bool guardar_inventario(int dados_exp[], int objetivos[], int turno_actual){
+bool guardar_inventario(int dados_exp[], int objetivos[], int const CANT_ESTATUILLAS, int turno_actual){
     // Determina si corresponde que un jugador gane una estatuilla en funcion de los dados que tira y el objetivo que haya elegido.
-
-    int const CANT_ESTATUILLAS = 5; //HARDCODEO
     
     bool rtn = false;
-    bool ests_coinciden[CANT_ESTATUILLAS] = {
-        arena_cangrejo(dados_exp[0], dados_exp[1], dados_exp[2]),
-        tierra_hormiga(dados_exp[0], dados_exp[1], dados_exp[2]),
-        agua_medusa(dados_exp[0], dados_exp[1], dados_exp[2]),
-        aire_aguila(dados_exp[0], dados_exp[1], dados_exp[2]),
-        fuego_salamandra(dados_exp[0], dados_exp[1], dados_exp[2])};
+    bool ests_coinciden[CANT_ESTATUILLAS]; // Array que tiene verdaderos en los componentes que verifican los requisitos de obtencion. Los elementos son hardcodeados porque hay que agregar manualmente la condicion de cada estatuilla.
+    
+    ests_coinciden[0] = arena_cangrejo(dados_exp[0], dados_exp[1], dados_exp[2]);
+    ests_coinciden[1] = tierra_hormiga(dados_exp[0], dados_exp[1], dados_exp[2]);
+    ests_coinciden[2] = agua_medusa(dados_exp[0], dados_exp[1], dados_exp[2]);
+    ests_coinciden[3] = aire_aguila(dados_exp[0], dados_exp[1], dados_exp[2]);
+    ests_coinciden[4] = fuego_salamandra(dados_exp[0], dados_exp[1], dados_exp[2]);
 
     if(ests_coinciden[objetivos[turno_actual - 1] - 1] == 1){
         rtn = true;
-        cout << endl << "El jugador " << turno_actual << " gana la estatuilla de " << nombre_de_estatuilla(objetivos[turno_actual - 1] - 1) << endl;
+        cout << endl << "El jugador " << turno_actual << " gana la estatuilla de " << nombre_de_estatuilla(objetivos[turno_actual - 1] - 1, CANT_ESTATUILLAS) << endl;
     }
 
     return rtn;
@@ -329,16 +328,15 @@ int turno_nuevo(int turno_actual, int const CANT_JUGADORES){
     return turno_nuevo;
 }
 
-string nombre_de_estatuilla(int numero_de_estat){
+string nombre_de_estatuilla(int numero_de_estat, int const CANT_ESTATUILLAS){
     // Devuelve el nombre de una de las estatuillas.
 
-    int const CANT_ESTATUILLAS = 5; //HARDCODEO
-    string nombres_de_estat[CANT_ESTATUILLAS] =
-        {"arena: Cangrejo",
-        "tierra: Hormiga",
-        "agua: Medusa",
-        "aire: Aguila",
-        "fuego: Salamandra"};
+    string nombres_de_estat[CANT_ESTATUILLAS]; // Array que tiene por componentes los nombres de cada estatuilla. Los elementos son hardcodeados porque hay que agregar manualmente el nombre de cada estatuilla.
+    nombres_de_estat[0] = "arena: Cangrejo";
+    nombres_de_estat[1] = "tierra: Hormiga";
+    nombres_de_estat[2] = "agua: Medusa";
+    nombres_de_estat[3] = "aire: Aguila";
+    nombres_de_estat[4] = "fuego: Salamandra";
 
     return nombres_de_estat[numero_de_estat];
 }
@@ -353,7 +351,7 @@ void mostrar_inventario(string nombres_jugadores[], int const CANT_JUGADORES, in
 
         for(int j = 0; j < CANT_ESTATUILLAS; j++){
             if(estatuillas[j] == i + 1){
-                cout << "- Estatuilla de " << nombre_de_estatuilla(j) << endl;
+                cout << "- Estatuilla de " << nombre_de_estatuilla(j, CANT_ESTATUILLAS) << endl;
             }
         }
     }
@@ -368,7 +366,7 @@ void elegir_estatuillas_disponibles(int estatuillas[], int const CANT_ESTATUILLA
 
     for(int i = 0; i < CANT_ESTATUILLAS; i++){
         if(estatuillas[i] == 0){
-            cout << i + 1 << " - Estatuilla de " << nombre_de_estatuilla(i) << endl;
+            cout << i + 1 << " - Estatuilla de " << nombre_de_estatuilla(i, CANT_ESTATUILLAS) << endl;
         }
     }
 }
@@ -481,7 +479,7 @@ void fase_expedicion(string nombres_jugadores[], int const CANT_JUGADORES){
                 
                 cout << nombres_jugadores[turno_actual-1] << " tira los dados " << dados_exp[0] << dados_exp[1] << dados_exp[2] << endl; //MOSTRARDADOS
                 
-                if(estatuillas[objetivos[turno_actual - 1] - 1] == 0 && guardar_inventario(dados_exp, objetivos, turno_actual) == 1){
+                if(estatuillas[objetivos[turno_actual - 1] - 1] == 0 && guardar_inventario(dados_exp, objetivos, CANT_ESTATUILLAS, turno_actual) == 1){
                     estatuillas[objetivos[turno_actual - 1] - 1] = turno_actual;
                 }
             }
