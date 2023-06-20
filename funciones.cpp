@@ -2,6 +2,77 @@
 #include <random>
 using namespace std;
 #include "funciones.h"
+#include "rlutil.h"
+
+void dibujar_dado(int valor_del_dado, int posicion){
+    //
+
+    int const LARGO = 19;
+    int const ALTO = 10;
+
+    for(int x = 1; x < LARGO; x++){ // Dibujar cuadrado
+        for(int y = 1; y < ALTO; y++){
+            rlutil::locate(x + LARGO * posicion, y + 2);
+            cout << "█" << endl;
+        }
+    }
+
+    switch (valor_del_dado){
+        case 1:
+            rlutil::locate(9 + LARGO * posicion, 7);
+            cout << "░░" << endl;
+            break;
+
+        case 2:
+            rlutil::locate(3 + LARGO * posicion, 4);
+            cout << "░░" << endl;
+
+            rlutil::locate(15 + LARGO * posicion, 10);
+            cout << "░░" << endl;
+            break;
+
+        case 3:
+            rlutil::locate(3 + LARGO * posicion, 4);
+            cout << "░░" << endl;
+
+            rlutil::locate(9 + LARGO * posicion, 7);
+            cout << "░░" << endl;
+
+            rlutil::locate(15 + LARGO * posicion, 10);
+            cout << "░░" << endl;
+            break;
+    }
+
+    for(int y = 0; y < 5; y++){
+        cout << endl;
+    }
+}
+
+void mostrar_dados(int dados[], int const CANT_DADOS){
+    //
+
+    for(int i = 0; i < CANT_DADOS; i++){
+        if(dados[i] != 0){
+
+        }
+    }
+}
+
+int indice_max(int arr[], int const tam){
+    // Devuelve el indice del componente maximo de un array.
+
+    int max = arr[0];
+    int indice = 0;
+
+    for(int i = 1; i < tam; i++){
+        if(max < arr[i]){
+            max = arr[i];
+            indice = i;
+        }
+    }
+
+    return indice;
+}
 
 void puntos_de_victoria(string nombres_jugadores[], int const CANT_JUGADORES, int estatuillas[], int const CANT_ESTATUILLAS, int ganador_fase_fin, int intentos[][5]){
     // Suma los puntos de victoria para determinar el ganador.
@@ -20,20 +91,20 @@ void puntos_de_victoria(string nombres_jugadores[], int const CANT_JUGADORES, in
 
     for(int i = 0; i < CANT_ESTATUILLAS; i++){ // OBTIENE ESTATUILLA
         puntos_de_victoria[estatuillas[i] - 1] += PDV_POR_ESTAT;
-        cout << "El jugador " << estatuillas[i] << " gana " << PDV_POR_ESTAT << " puntos por haber obtenido la estatuilla de " << nombre_de_estatuilla(i, CANT_ESTATUILLAS) << "." << endl;
+        cout << nombres_jugadores[estatuillas[i] - 1] << " gana " << PDV_POR_ESTAT << " puntos por haber obtenido la estatuilla de " << nombre_de_estatuilla(i, CANT_ESTATUILLAS) << "." << endl;
     }
 
     for(int i = 0; i < CANT_JUGADORES; i++){ // OBTIENE ESTATUILLA EN PRIMER INTENTO
         for(int j = 0; j < CANT_ESTATUILLAS; j++){
             if(intentos[i][j] == 1 && estatuillas[j] == i + 1){
                 puntos_de_victoria[i] += PDV_POR_EST_PP;
-                cout << "El jugador " << i + 1 << " gana " << PDV_POR_EST_PP << " puntos por haber obtenido la estatuilla de " << nombre_de_estatuilla(j, CANT_ESTATUILLAS) << " en el primer intento." << endl;
+                cout << nombres_jugadores[i] << " gana " << PDV_POR_EST_PP << " puntos por haber obtenido la estatuilla de " << nombre_de_estatuilla(j, CANT_ESTATUILLAS) << " en el primer intento." << endl;
             }
         }
     }
 
     puntos_de_victoria[ganador_fase_fin - 1] += PDV_POR_GANADOR; // GANADOR FASE FINAL
-    cout << "El jugador " << ganador_fase_fin << " gana " << PDV_POR_GANADOR << " puntos por haber ganado la fase final." << endl;
+    cout << nombres_jugadores[ganador_fase_fin - 1] << " gana " << PDV_POR_GANADOR << " puntos por haber ganado la fase final." << endl;
 
     for(int i = 0; i < CANT_JUGADORES; i++){ // GANADOR FASE FINAL SIN ESTATUILLAS
         bool gano_sin_ests = true;
@@ -46,7 +117,7 @@ void puntos_de_victoria(string nombres_jugadores[], int const CANT_JUGADORES, in
 
         if(gano_sin_ests == true){
             puntos_de_victoria[i] += PDV_POR_GAN_PP;
-            cout << "El jugador " << i + 1 << " gana " << PDV_POR_GAN_PP << " puntos por haber ganado la fase final sin estatuillas en su inventario." << endl;
+            cout << nombres_jugadores[i] << " gana " << PDV_POR_GAN_PP << " puntos por haber ganado la fase final sin estatuillas en su inventario." << endl;
         }
     }
 
@@ -54,7 +125,7 @@ void puntos_de_victoria(string nombres_jugadores[], int const CANT_JUGADORES, in
         for(int j = 0; j < CANT_ESTATUILLAS; j++){
             if(estatuillas[j] != i + 1){
                 puntos_de_victoria[i] -= PDV_POR_EST_RIVAL;
-                cout << "El jugador " << i + 1 << " pierde " << PDV_POR_EST_RIVAL << " puntos por no haber ganado la estatuilla de " << nombre_de_estatuilla(j, CANT_ESTATUILLAS) << "." << endl;
+                cout << nombres_jugadores[i] << " pierde " << PDV_POR_EST_RIVAL << " puntos por no haber ganado la estatuilla de " << nombre_de_estatuilla(j, CANT_ESTATUILLAS) << "." << endl;
             }
         }
     }
@@ -62,13 +133,20 @@ void puntos_de_victoria(string nombres_jugadores[], int const CANT_JUGADORES, in
     for(int i = 0; i < CANT_JUGADORES; i++){ // LANZADOR FASE FINAL
         if(jugador_inicial_final(estatuillas, CANT_ESTATUILLAS, CANT_JUGADORES) == i + 1){
             puntos_de_victoria[i] -= PDV_POR_LANZAM;
-            cout << "El jugador " << i + 1 << " pierde " << PDV_POR_LANZAM << " punto por haber lanzado en fase final." << endl;
+            cout << nombres_jugadores[i] << " pierde " << PDV_POR_LANZAM << " punto por haber lanzado en fase final." << endl;
         }
     }
 
     for(int i = 0; i < CANT_JUGADORES; i++){
-        cout << "El jugador " << i + 1 << " obtuvo " << puntos_de_victoria[i] << " puntos de victoria." << endl;
+        if(puntos_de_victoria[i] < 0){
+            puntos_de_victoria[i] = 0;
+        }
+        cout << nombres_jugadores[i] << " obtuvo " << puntos_de_victoria[i] << " puntos de victoria." << endl;
     }
+
+    cout << nombres_jugadores[indice_max(puntos_de_victoria, CANT_JUGADORES)] << " gana!" << endl;
+
+    menu();
 }
 
 int jugador_inicial_final(int estatuillas[], int const CANT_ESTATUILLAS, int const CANT_JUGADORES){
@@ -150,7 +228,7 @@ bool fin_de_fase_fin(int dados_final[], int cant_dds, int turno_actual, int port
     }
 
     if(gana_fase_fin == true){ // Informar ganador
-        cout << "El jugador " << turno_actual << " gana la fase final con los dados ";
+        cout << "Ganaste la fase final con los dados ";
         for(int i = 0; i < CANT_DADOS_FINAL; i++){
             cout << dados_final[i];
             if(i < CANT_DADOS_FINAL - 2){
@@ -178,7 +256,7 @@ void fase_final(string nombres_jugadores[], int const CANT_JUGADORES, int estatu
     int reemplazo_hormiga;
     int turno_actual = jugador_inicial_final(estatuillas, CANT_ESTATUILLAS, CANT_JUGADORES);
 
-    cout << "El jugador " << estatuillas[1] << " tiene la estatuilla de la hormiga. Elegir un numero del 1 al 6 para luego usar como reemplazo." << endl;
+    cout << nombres_jugadores[estatuillas[1] - 1] << " tiene la estatuilla de la hormiga. Elegir un numero del 1 al 6 para luego usar como reemplazo." << endl;
     cin >> reemplazo_hormiga;
 
     cout << endl << "¡Comienza la fase final!" << endl;
@@ -192,7 +270,7 @@ void fase_final(string nombres_jugadores[], int const CANT_JUGADORES, int estatu
         }
 
         if(turno_actual == estatuillas[1]){ // Si tiene hormiga, puede elegir un dado y cambiarlo por el reemplazo
-            cout << "El jugador tiene la estatuilla de la hormiga. Elegir un dado para reemplazarlo por " << reemplazo_hormiga << ". ";
+            cout << nombres_jugadores[turno_actual - 1] << " tiene la estatuilla de la hormiga. Elegir un dado para reemplazarlo por " << reemplazo_hormiga << ". ";
             cout << "Ingresar 0 en caso de no querer cambiar ningun dado." << endl;
             cin >> cambio_dado;
 
@@ -207,7 +285,7 @@ void fase_final(string nombres_jugadores[], int const CANT_JUGADORES, int estatu
         }
 
         if(turno_actual == estatuillas[3]){ // Si tiene aguila, puede elegir un dado y asignarle un nuevo valor
-            cout << "El jugador tiene la estatuilla del aguila. Elegir un dado para cambiar su valor. Ingresar 0 en caso de no querer cambiar ningun dado." << endl;
+            cout << nombres_jugadores[turno_actual - 1] << " tiene la estatuilla del aguila. Elegir un dado para cambiar su valor. Ingresar 0 en caso de no querer cambiar ningun dado." << endl;
             cin >> cambio_dado;
 
             if(cambio_dado != 0){
@@ -225,7 +303,7 @@ void fase_final(string nombres_jugadores[], int const CANT_JUGADORES, int estatu
 
         if(primer_tiro_cangrejo == false && turno_actual == estatuillas[0] && fin_de_fase_fin(dados_final, CANT_DADOS_FINAL, turno_actual, estatuillas[2], estatuillas[4]) == false){ // Si tiene cangrejo, no cambia el turno porque tira el jugador nuevamente
             primer_tiro_cangrejo = true;
-            cout << "El jugador " << turno_actual << " tira nuevamente por tener la estatuilla del cangrejo." << endl;
+            cout << nombres_jugadores[turno_actual - 1] << " tira nuevamente por tener la estatuilla del cangrejo." << endl;
         } else{
             turno_actual = turno_nuevo(turno_actual, CANT_JUGADORES);
         }
@@ -308,7 +386,7 @@ bool guardar_inventario(int dados_exp[], int objetivos[], int const CANT_ESTATUI
 
     if(ests_coinciden[objetivos[turno_actual - 1] - 1] == 1){
         rtn = true;
-        cout << endl << "El jugador " << turno_actual << " gana la estatuilla de " << nombre_de_estatuilla(objetivos[turno_actual - 1] - 1, CANT_ESTATUILLAS) << endl;
+        cout << endl << "Ganaste la estatuilla de " << nombre_de_estatuilla(objetivos[turno_actual - 1] - 1, CANT_ESTATUILLAS) << endl;
     }
 
     return rtn;
@@ -457,8 +535,6 @@ void fase_expedicion(string nombres_jugadores[], int const CANT_JUGADORES){
         }
 
         for(int i = 0; i < CANT_JUGADORES; i++){ // Cada jugador tira los dados
-            cout << "Turno de " << nombres_jugadores[turno_actual - 1] << endl;
-
             if(estatuillas[2] == turno_actual && turnos_perdidos < TURNOS_MALDICION_MEDUSA){ // Si el jugador tiene la medusa, no tira por 3 turnos
                 tiros = 0;
                 turnos_perdidos ++;

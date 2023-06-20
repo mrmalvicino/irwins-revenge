@@ -1,6 +1,8 @@
 #include <iostream>
 using namespace std;
 
+void dibujar_dado(int valor, int posicion);
+int indice_max(int arr[], int const tam);
 void puntos_de_victoria(string jugadores_final[], int const CANT_JUGADORES, int estatuillas[], int const CANT_ESTATUILLAS, int ganador_fase_fin, int intentos[][5]);
 int jugador_inicial_final(int estatuillas[], int const CANT_ESTATUILLAS, int const CANT_JUGADORES);
 bool fin_de_fase_fin(int dados_ordenados[], int cant_dds, int turno_actual, int portador_de_medusa, int portador_de_salamandra);
