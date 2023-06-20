@@ -300,17 +300,17 @@ bool fuego_salamandra(int dado1, int dado2, int dado3){
     return rtn;
 }
 
-bool guardar_inventario(int dado1, int dado2, int dado3, int turno_actual, int objetivos[]){
+bool guardar_inventario(int dados_exp[], int objetivos[], int turno_actual){
     // Guarda en el inventario de un jugador la estatuilla objetivo si los dados cumplen el requisito de obtencion.
 
-    int const CANT_ESTATUILLAS = 5;
+    int const CANT_ESTATUILLAS = 5; //HARDCODEO
 
     bool ests_coinciden[CANT_ESTATUILLAS] = {
-        arena_cangrejo(dado1, dado2, dado3),
-        tierra_hormiga(dado1, dado2, dado3),
-        agua_medusa(dado1, dado2, dado3),
-        aire_aguila(dado1, dado2, dado3),
-        fuego_salamandra(dado1, dado2, dado3)};
+        arena_cangrejo(dados_exp[0], dados_exp[1], dados_exp[2]),
+        tierra_hormiga(dados_exp[0], dados_exp[1], dados_exp[2]),
+        agua_medusa(dados_exp[0], dados_exp[1], dados_exp[2]),
+        aire_aguila(dados_exp[0], dados_exp[1], dados_exp[2]),
+        fuego_salamandra(dados_exp[0], dados_exp[1], dados_exp[2])};
 
     int objetivo_elegido = objetivos[turno_actual - 1] - 1;
     int rtn = false;
@@ -386,7 +386,7 @@ void elegir_estatuillas_disponibles(int estatuillas[], int cant_ests){
 }
 
 int tirar_dado(int cant_caras){
-    // Devuelve un numero aleatorio con probabilidad 1/caras.
+    // Devuelve un numero aleatorio con probabilidad de uno entre la cantidad de caras.
 
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -402,7 +402,7 @@ int jugador_inicial_exp(){
     int dado_jugador_1 = 0;
     int dado_jugador_2 = 0;
 
-    while(dado_jugador_1 == dado_jugador_2){
+    while(dado_jugador_1 == dado_jugador_2){ //MOSTRARDADOS
         dado_jugador_1 = tirar_dado(10);
         dado_jugador_2 = tirar_dado(10);
     }
@@ -434,16 +434,16 @@ bool fin_de_fase_exp(int estatuillas[], int cant_ests){
 void fase_expedicion(string nombres_jugadores[], int cant_jugs){
     // Jugar fase de expedicion.
 
-    int const CANT_ESTATUILLAS = 5;
     int const CANT_JUGADORES = cant_jugs;
-    int estatuillas[CANT_ESTATUILLAS] = {}; // Array que tiene en cada componente a quien pertenece la estatuilla o tiene cero si nadie la tiene
-    int objetivos[CANT_JUGADORES]; // Array que tiene el objetivo de cada jugador por turno
-    int turno_actual = jugador_inicial_exp(); // Numero de jugador al que le corresponde el turno (entero mayor que cero)
-    int dado1;
-    int dado2;
-    int dado3;
+    int const CANT_DADOS_EXP = 3;
+    int const CANT_CARAS_EXP = 10;
+    int const CANT_ESTATUILLAS = 5;
     int const TIROS_MALDICION_AGUILA = 2;
     int const TURNOS_MALDICION_MEDUSA = 3;
+    int estatuillas[CANT_ESTATUILLAS] = {}; // Array que tiene en cada componente a quien pertenece la estatuilla o tiene cero si nadie la tiene
+    int objetivos[CANT_JUGADORES]; // Array que tiene el objetivo de cada jugador por turno
+    int dados_exp[CANT_DADOS_EXP]; // Array de dados usados en fase de expedicion. Si el tercer dado no se usa, este debe valer cero.
+    int turno_actual = jugador_inicial_exp(); // Numero de jugador al que le corresponde el turno. Entero mayor que cero.
     int turnos_perdidos = 0;
 
     int intentos[CANT_JUGADORES][CANT_ESTATUILLAS]; // Matriz que contiene las veces que un jugador eligio una estatuilla como objetivo. Cada fila representa un jugador. Cada columna representa una estatuilla.
@@ -488,24 +488,18 @@ void fase_expedicion(string nombres_jugadores[], int cant_jugs){
             }
 
             for(int i = 0; i < tiros; i++){ // Tiro de dados por jugador
-                if(estatuillas[4] == 0 || estatuillas[4] == turno_actual){ // Si nadie tiene la salamandra o la tiene el del turno, este tira dos dados
-                    dado1 = tirar_dado(10);
-                    dado2 = tirar_dado(10);
-                    cout << nombres_jugadores[turno_actual-1] << " tira los dados " << dado1 << " y " << dado2 << endl;
-                    
-                    if(estatuillas[objetivo_elegido] == 0 && guardar_inventario(dado1, dado2, 0, turno_actual, objetivos) == 1){
-                        estatuillas[objetivo_elegido] = turno_actual;
-                    }
+                for(int i = 0; i < CANT_DADOS_EXP; i++){
+                    dados_exp[i] = tirar_dado(CANT_CARAS_EXP);
+                }
 
-                } else if(estatuillas[4] != 0 && estatuillas[4] != turno_actual){ // Si otro tiene la salamandra el del turno tira 3 dados
-                    dado1 = tirar_dado(10);
-                    dado2 = tirar_dado(10);
-                    dado3 = tirar_dado(10);
-                    cout << nombres_jugadores[turno_actual-1] << " tira los dados " << dado1 << ", " << dado2 << " y " << dado3 << endl;
-                    
-                    if(estatuillas[objetivo_elegido] == 0 && guardar_inventario(dado1, dado2, dado3, turno_actual, objetivos) == 1){
-                        estatuillas[objetivo_elegido] = turno_actual;
-                    }
+                if(estatuillas[4] == 0 || estatuillas[4] == turno_actual){ // Si nadie tiene la salamandra o la tiene el del turno, este tira dos dados
+                    dados_exp[2] = 0;
+                }
+                
+                cout << nombres_jugadores[turno_actual-1] << " tira los dados " << dados_exp[0] << dados_exp[1] << dados_exp[2] << endl; //MOSTRARDADOS
+                
+                if(estatuillas[objetivo_elegido] == 0 && guardar_inventario(dados_exp, objetivos, turno_actual) == 1){
+                    estatuillas[objetivo_elegido] = turno_actual;
                 }
             }
 
