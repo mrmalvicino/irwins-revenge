@@ -4,6 +4,17 @@ using namespace std;
 #include "funciones.h"
 #include "rlutil.h"
 
+void ingresar_cero_para_continuar(){
+    // Pausa el flujo del programa hasta que el usuario ingrese cero.
+    
+    int aux = 1;
+
+    do{
+        cout << "Ingresar 0 para continuar" << endl;
+        cin >> aux;
+    } while(aux != 0);
+}
+
 bool array_contiene_numero(int arr[], int tam, int num){
     // Determina si un numero se encuentra en un array.
 
@@ -246,12 +257,7 @@ void mostrar_dados(int dados[], int const CANT_DADOS, bool clear_cls){
         }
     }
 
-    int aux = 1;
-
-    do{
-        cout << "Ingresar 0 para continuar" << endl;
-        cin >> aux;
-    } while(aux != 0);
+    ingresar_cero_para_continuar();
     
     if(clear_cls == true){
         system("clear");
@@ -274,7 +280,7 @@ int indice_max(int arr[], int const tam){
     return indice;
 }
 
-void puntos_de_victoria(string nombres_jugadores[], int const CANT_JUGADORES, int estatuillas[], int const CANT_ESTATUILLAS, int ganador_fase_fin, int intentos[][5]){
+void puntos_de_victoria(string nombres_jugadores[], int const CANT_JUGADORES, int estatuillas[], int const CANT_ESTATUILLAS, int ganador_fase_fin, int intentos[][5], int puntos_maldicion_cangrejo, int puntos_maldicion_hormiga){
     // Suma los puntos de victoria para determinar el ganador.
 
     int const PDV_POR_ESTAT = 5;
@@ -288,6 +294,12 @@ void puntos_de_victoria(string nombres_jugadores[], int const CANT_JUGADORES, in
     for(int i = 0; i < CANT_JUGADORES; i++){
         puntos_de_victoria[i] = 0;
     }
+
+    puntos_de_victoria[estatuillas[0] - 1] -= puntos_maldicion_cangrejo;
+    cout << nombres_jugadores[estatuillas[0] - 1] << " perdio " << puntos_maldicion_cangrejo << " puntos por tener la maldicion del cangrejo." << endl;
+    
+    puntos_de_victoria[estatuillas[1] - 1] -= puntos_maldicion_hormiga;
+    cout << nombres_jugadores[estatuillas[1] - 1] << " perdio " << puntos_maldicion_hormiga << " puntos por tener la maldicion de la hormiga." << endl;
 
     for(int i = 0; i < CANT_ESTATUILLAS; i++){ // OBTIENE ESTATUILLA
         puntos_de_victoria[estatuillas[i] - 1] += PDV_POR_ESTAT;
@@ -441,12 +453,36 @@ void fase_final(string nombres_jugadores[], int const CANT_JUGADORES, int estatu
     
     int const CANT_DADOS_FINAL = 5;
     int const CANT_CARAS_FINAL = 6;
+    int const DADOS_MALDICION_CANGREJO = 1;
+    int const CARAS_MALDICION_CANGREJO = 10;
+    int const DADOS_MALDICION_HORMIGA = 2;
+    int const CARAS_MALDICION_HORMIGA = 10;
     int dados_final[CANT_DADOS_FINAL] = {};
     int ganador_fase_fin;
+    int puntos_maldicion_cangrejo = 0;
+    int puntos_maldicion_hormiga = 0;
     bool primer_tiro_cangrejo = false;
     int cambio_dado;
     int reemplazo_hormiga = 0;
     int turno_actual = jugador_inicial_final(estatuillas, CANT_ESTATUILLAS, CANT_JUGADORES);
+
+    cout << nombres_jugadores[estatuillas[0] - 1] << " tiene la maldicion del cangrejo. " << nombres_jugadores[turno_nuevo(estatuillas[0] - 1, CANT_JUGADORES) - 1] << " tira " << DADOS_MALDICION_CANGREJO << " dado para descontar puntaje de " << nombres_jugadores[estatuillas[0] - 1] << endl;
+    
+    for(int i = 0; i < DADOS_MALDICION_CANGREJO; i++){
+        dados_final[i] = tirar_dado(CARAS_MALDICION_CANGREJO);
+        puntos_maldicion_cangrejo += dados_final[i];
+    }
+    
+    mostrar_dados(dados_final, DADOS_MALDICION_CANGREJO, true);
+
+    cout << nombres_jugadores[estatuillas[1] - 1] << " tiene la maldicion de la hormiga. " << nombres_jugadores[turno_nuevo(estatuillas[1] - 1, CANT_JUGADORES) - 1] << " tira " << DADOS_MALDICION_HORMIGA << " dados para descontar puntaje de " << nombres_jugadores[estatuillas[1] - 1] << endl;
+    
+    for(int i = 0; i < DADOS_MALDICION_HORMIGA; i++){
+        dados_final[i] = tirar_dado(CARAS_MALDICION_HORMIGA);
+        puntos_maldicion_hormiga += dados_final[i];
+    }
+
+    mostrar_dados(dados_final, DADOS_MALDICION_HORMIGA, true);
 
     do{
         cout << nombres_jugadores[estatuillas[1] - 1] << " tiene la bendicion de la hormiga. Elegir un numero del 1 al 6 para luego usar como reemplazo." << endl;
@@ -513,7 +549,7 @@ void fase_final(string nombres_jugadores[], int const CANT_JUGADORES, int estatu
         }
     } while(fin_de_fase_fin(dados_final, CANT_DADOS_FINAL, ganador_fase_fin, estatuillas[2], estatuillas[4]) == false);
 
-    puntos_de_victoria(nombres_jugadores, CANT_JUGADORES, estatuillas, CANT_ESTATUILLAS, ganador_fase_fin, intentos);
+    puntos_de_victoria(nombres_jugadores, CANT_JUGADORES, estatuillas, CANT_ESTATUILLAS, ganador_fase_fin, intentos, puntos_maldicion_cangrejo, puntos_maldicion_hormiga);
 }
 
 bool arena_cangrejo(int dado1, int dado2, int dado3){
@@ -591,6 +627,8 @@ bool guardar_inventario(int dados_exp[], int objetivos[], int const CANT_ESTATUI
     if(ests_coinciden[objetivos[turno_actual - 1] - 1] == 1){
         rtn = true;
         cout << endl << "Ganaste la estatuilla de " << nombre_de_estatuilla(objetivos[turno_actual - 1] - 1, CANT_ESTATUILLAS) << endl;
+        ingresar_cero_para_continuar();
+        system("clear");
     }
 
     return rtn;
@@ -676,14 +714,7 @@ int jugador_inicial_exp(string nombres_jugadores[], int const CANT_JUGADORES){
             dados_lanz[i] = tirar_dado(10);
             cout << nombres_jugadores[i] << " tira el dado:" << endl;
             dibujar_dado(dados_lanz[i],0);
-            
-            int aux = 1;
-
-            do{
-                cout << "Ingresar 0 para continuar" << endl;
-                cin >> aux;
-            } while(aux != 0);
-
+            ingresar_cero_para_continuar();
             system("clear");
         }
     }
@@ -743,6 +774,7 @@ void fase_expedicion(string nombres_jugadores[], int const CANT_JUGADORES){
         for(int i = 0; i < CANT_JUGADORES; i++){ // Cada jugador elige un objetivo
             if(estatuillas[2] == turno_actual && turnos_perdidos < TURNOS_MALDICION_MEDUSA){ // Si el jugador tiene la medusa, no elige objetivo por 3 turnos
                 cout << nombres_jugadores[turno_actual - 1] << " tiene la maldicion de la medusa y pierde los siguientes " << TURNOS_MALDICION_MEDUSA - turnos_perdidos << " turnos."  << endl;
+                ingresar_cero_para_continuar();
             } else{
                 cout << "Turno de " << nombres_jugadores[turno_actual - 1] << endl;
                 

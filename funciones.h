@@ -1,11 +1,12 @@
 #include <iostream>
 using namespace std;
 
+void ingresar_cero_para_continuar();
 bool array_contiene_numero(int arr[], int tam, int num);
 void dibujar_dado(int valor_del_dado, int posicion);
 void mostrar_dados(int dados[], int const CANT_DADOS, bool clear_cls);
 int indice_max(int arr[], int const tam);
-void puntos_de_victoria(string jugadores_final[], int const CANT_JUGADORES, int estatuillas[], int const CANT_ESTATUILLAS, int ganador_fase_fin, int intentos[][5]);
+void puntos_de_victoria(string jugadores_final[], int const CANT_JUGADORES, int estatuillas[], int const CANT_ESTATUILLAS, int ganador_fase_fin, int intentos[][5], int puntos_maldicion_cangrejo, int puntos_maldicion_hormiga);
 int jugador_inicial_final(int estatuillas[], int const CANT_ESTATUILLAS, int const CANT_JUGADORES);
 bool fin_de_fase_fin(int dados_ordenados[], int cant_dds, int turno_actual, int portador_de_medusa, int portador_de_salamandra);
 void fase_final(string jugadores_fase_exp[], int const CANT_JUGADORES, int estatuillas[], int const CANT_ESTATUILLAS, int intentos[][5]);
