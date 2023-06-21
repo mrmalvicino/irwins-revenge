@@ -32,6 +32,8 @@ bool array_contiene_numero(int arr[], int tam, int num){
 void dibujar_dado(int valor_del_dado, int posicion){
     // Dibuja un dado de cierto valor. La posicion es un numero entero y varia horizontalmente.
 
+    string const FONDO_DE_DADO = "█"; // En Windows reemplazar "█" por char(219)
+    string const PUNTO_DE_DADO = "░░"; // En Windows reemplazar "░░" por "  "
     int const DESFASAJE = 5;
     int const LARGO = 19;
     int const ALTO = 10;
@@ -46,14 +48,14 @@ void dibujar_dado(int valor_del_dado, int posicion){
     for(int x = 1; x < LARGO; x++){ // Dibujar cuadrado
         for(int y = 1; y < ALTO; y++){
             rlutil::locate(x + LARGO * posicion, y + DESFASAJE);
-            cout << "█" << endl; // En Windows reemplazar este "█" por char(219)
+            cout << FONDO_DE_DADO << endl;
         }
     }
 
     switch (valor_del_dado){
         case 1:
             rlutil::locate(COL_2 + LARGO * posicion, FIL_2);
-            cout << "░░" << endl; // En Windows reemplazar todos los "░░" por "  "
+            cout << "░░" << endl;
             break;
 
         case 2:
@@ -363,7 +365,7 @@ void puntos_de_victoria(string nombres_jugadores[], int const CANT_JUGADORES, in
 }
 
 int jugador_inicial_final(int estatuillas[], int const CANT_ESTATUILLAS, int const CANT_JUGADORES){
-    // Determina el jugador que comienza la fase de expedicion.
+    // Determina el jugador que comienza la fase final.
 
     int jugador_inicial = 1;
     int contador_ests = 0;
@@ -725,7 +727,7 @@ int jugador_inicial_exp(string nombres_jugadores[], int const CANT_JUGADORES){
         jugador_inicial = 2;
     }
 
-    cout << "¡Comienza " << nombres_jugadores[jugador_inicial - 1] << " por haber tirado el dado de menor valor!";
+    cout << "¡Comienza " << nombres_jugadores[jugador_inicial - 1] << " la fase de expedicion por haber tirado el dado de menor valor!";
 
     return jugador_inicial;
 }
@@ -765,8 +767,6 @@ void fase_expedicion(string nombres_jugadores[], int const CANT_JUGADORES){
             intentos[i][j] = 0;
         }
     }
-
-    cout << endl << "¡Comienza la fase de expedicion!" << endl;
 
     while(fin_de_fase_exp(estatuillas, CANT_ESTATUILLAS) == false){ // Mientras haya estatuillas disponibles, elegir objetivo y tirar dados
         mostrar_inventario(nombres_jugadores, CANT_JUGADORES, estatuillas, CANT_ESTATUILLAS);
