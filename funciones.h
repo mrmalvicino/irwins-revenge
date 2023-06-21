@@ -1,7 +1,8 @@
 #include <iostream>
 using namespace std;
 
-void dibujar_dado(int valor, int posicion);
+void dibujar_dado(int valor_del_dado, int posicion);
+void mostrar_dados(int dados[], int const CANT_DADOS, bool clear_cls);
 int indice_max(int arr[], int const tam);
 void puntos_de_victoria(string jugadores_final[], int const CANT_JUGADORES, int estatuillas[], int const CANT_ESTATUILLAS, int ganador_fase_fin, int intentos[][5]);
 int jugador_inicial_final(int estatuillas[], int const CANT_ESTATUILLAS, int const CANT_JUGADORES);
@@ -18,7 +19,7 @@ string nombre_de_estatuilla(int numero_de_estat, int const CANT_ESTATUILLAS);
 void mostrar_inventario(string jugadores_fase_exp[], int const CANT_JUGADORES, int estatuillas[], int const CANT_ESTATUILLAS);
 void elegir_estatuillas_disponibles(int estatuillas[], int const CANT_ESTATUILLAS);
 int tirar_dado(int cant_caras);
-int jugador_inicial_exp();
+int jugador_inicial_exp(string nombres_jugadores[], int const CANT_JUGADORES);
 bool fin_de_fase_exp(int estatuillas[], int const CANT_ESTATUILLAS);
 void fase_expedicion(string jugadores_menu[], int const CANT_JUGADORES);
 void menu_jugar(int const CANT_JUGADORES);
