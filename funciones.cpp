@@ -4,6 +4,20 @@ using namespace std;
 #include "funciones.h"
 #include "rlutil.h"
 
+bool array_contiene_numero(int arr[], int tam, int num){
+    // Determina si un numero se encuentra en un array.
+
+    bool rtn = false;
+
+    for(int i = 0; i < tam; i++){
+        if(arr[i] == num){
+            rtn = true;
+        }
+    }
+
+    return rtn;
+}
+
 void dibujar_dado(int valor_del_dado, int posicion){
     // Dibuja un dado de cierto valor. La posicion es un numero entero y varia horizontalmente.
 
@@ -232,9 +246,12 @@ void mostrar_dados(int dados[], int const CANT_DADOS, bool clear_cls){
         }
     }
 
-    int aux;
-    cout << "Ingresar 0 para continuar" << endl;
-    cin >> aux;
+    int aux = 1;
+
+    do{
+        cout << "Ingresar 0 para continuar" << endl;
+        cin >> aux;
+    } while(aux != 0);
     
     if(clear_cls == true){
         system("clear");
@@ -329,6 +346,7 @@ void puntos_de_victoria(string nombres_jugadores[], int const CANT_JUGADORES, in
 
     cout << nombres_jugadores[indice_max(puntos_de_victoria, CANT_JUGADORES)] << " gana!" << endl;
 
+    system("clear");
     menu();
 }
 
@@ -427,11 +445,14 @@ void fase_final(string nombres_jugadores[], int const CANT_JUGADORES, int estatu
     int ganador_fase_fin;
     bool primer_tiro_cangrejo = false;
     int cambio_dado;
-    int reemplazo_hormiga;
+    int reemplazo_hormiga = 0;
     int turno_actual = jugador_inicial_final(estatuillas, CANT_ESTATUILLAS, CANT_JUGADORES);
 
-    cout << nombres_jugadores[estatuillas[1] - 1] << " tiene la estatuilla de la hormiga. Elegir un numero del 1 al 6 para luego usar como reemplazo." << endl;
-    cin >> reemplazo_hormiga;
+    do{
+        cout << nombres_jugadores[estatuillas[1] - 1] << " tiene la estatuilla de la hormiga. Elegir un numero del 1 al 6 para luego usar como reemplazo." << endl;
+        cin >> reemplazo_hormiga;
+    } while(reemplazo_hormiga < 1 || 6 < reemplazo_hormiga);
+
     system("clear");
     cout << endl << "¡Comienza la fase final!" << endl;
 
@@ -445,9 +466,11 @@ void fase_final(string nombres_jugadores[], int const CANT_JUGADORES, int estatu
         mostrar_dados(dados_final, CANT_DADOS_FINAL, false);
 
         if(turno_actual == estatuillas[1]){ // Si tiene hormiga, puede elegir un dado y cambiarlo por el reemplazo
-            cout << nombres_jugadores[turno_actual - 1] << " tiene la estatuilla de la hormiga. Elegir un dado para reemplazarlo por " << reemplazo_hormiga << ". ";
-            cout << "Ingresar 0 en caso de no querer cambiar ningun dado." << endl;
-            cin >> cambio_dado;
+            do{
+                cout << nombres_jugadores[turno_actual - 1] << " tiene la estatuilla de la hormiga. Elegir un dado para reemplazarlo por " << reemplazo_hormiga << ". ";
+                cout << "Ingresar 0 en caso de no querer cambiar ningun dado." << endl;
+                cin >> cambio_dado;
+            } while(array_contiene_numero(dados_final, CANT_DADOS_FINAL, cambio_dado) == false && cambio_dado != 0);
 
             if(cambio_dado != 0){
                 for(int i = 0; i < CANT_DADOS_FINAL; i++){
@@ -460,14 +483,19 @@ void fase_final(string nombres_jugadores[], int const CANT_JUGADORES, int estatu
         }
 
         if(turno_actual == estatuillas[3]){ // Si tiene aguila, puede elegir un dado y asignarle un nuevo valor
-            cout << nombres_jugadores[turno_actual - 1] << " tiene la estatuilla del aguila. Elegir un dado para cambiar su valor. Ingresar 0 en caso de no querer cambiar ningun dado." << endl;
-            cin >> cambio_dado;
+            do{
+                cout << nombres_jugadores[turno_actual - 1] << " tiene la estatuilla del aguila. Elegir un dado para cambiar su valor. Ingresar 0 en caso de no querer cambiar ningun dado." << endl;
+                cin >> cambio_dado;
+            } while(array_contiene_numero(dados_final, CANT_DADOS_FINAL, cambio_dado) == false && cambio_dado != 0);
 
             if(cambio_dado != 0){
                 for(int i = 0; i < CANT_DADOS_FINAL; i++){
                     if(dados_final[i] == cambio_dado){
-                        cout << "ingresar nuevo valor para el dado " << dados_final[i] << ":" << endl;
-                        cin >> dados_final[i];
+                        do{
+                            cout << "ingresar nuevo valor para el dado " << dados_final[i] << ":" << endl;
+                            cin >> dados_final[i];
+                        } while(dados_final[i] < 1 || CANT_CARAS_FINAL < dados_final[i]);
+                        
                         i = CANT_DADOS_FINAL;
                     }
                 }
@@ -648,9 +676,14 @@ int jugador_inicial_exp(string nombres_jugadores[], int const CANT_JUGADORES){
             dados_lanz[i] = tirar_dado(10);
             cout << nombres_jugadores[i] << " tira el dado:" << endl;
             dibujar_dado(dados_lanz[i],0);
-            int aux;
-            cout << "Ingresar 0 para continuar" << endl;
-            cin >> aux;
+            
+            int aux = 1;
+
+            do{
+                cout << "Ingresar 0 para continuar" << endl;
+                cin >> aux;
+            } while(aux != 0);
+
             system("clear");
         }
     }
@@ -712,8 +745,12 @@ void fase_expedicion(string nombres_jugadores[], int const CANT_JUGADORES){
                 cout << nombres_jugadores[turno_actual - 1] << " tiene la medusa y pierde los siguientes " << TURNOS_MALDICION_MEDUSA - turnos_perdidos << " turnos."  << endl;
             } else{
                 cout << "Turno de " << nombres_jugadores[turno_actual - 1] << endl;
-                elegir_estatuillas_disponibles(estatuillas, CANT_ESTATUILLAS);
-                cin >> objetivos[turno_actual - 1];
+                
+                do{
+                    elegir_estatuillas_disponibles(estatuillas, CANT_ESTATUILLAS);
+                    cin >> objetivos[turno_actual - 1];
+                } while(objetivos[turno_actual - 1] < 1 || CANT_ESTATUILLAS < objetivos[turno_actual - 1] || estatuillas[objetivos[turno_actual - 1] - 1] != 0);
+
                 intentos[turno_actual - 1][objetivos[turno_actual - 1] - 1] ++;
             }
 

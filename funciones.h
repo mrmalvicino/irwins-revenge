@@ -1,6 +1,7 @@
 #include <iostream>
 using namespace std;
 
+bool array_contiene_numero(int arr[], int tam, int num);
 void dibujar_dado(int valor_del_dado, int posicion);
 void mostrar_dados(int dados[], int const CANT_DADOS, bool clear_cls);
 int indice_max(int arr[], int const tam);
