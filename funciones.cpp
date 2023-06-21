@@ -468,7 +468,7 @@ void fase_final(string nombres_jugadores[], int const CANT_JUGADORES, int estatu
     int reemplazo_hormiga = 0;
     int turno_actual = jugador_inicial_final(estatuillas, CANT_ESTATUILLAS, CANT_JUGADORES);
 
-    cout << nombres_jugadores[estatuillas[0] - 1] << " tiene la maldicion del cangrejo. " << nombres_jugadores[turno_nuevo(estatuillas[0] - 1, CANT_JUGADORES) - 1] << " tira " << DADOS_MALDICION_CANGREJO << " dado para descontar puntaje de " << nombres_jugadores[estatuillas[0] - 1] << endl;
+    cout << nombres_jugadores[estatuillas[0] - 1] << " tiene la maldicion del cangrejo. " << nombres_jugadores[turno_nuevo(estatuillas[0], CANT_JUGADORES) - 1] << " tira " << DADOS_MALDICION_CANGREJO << " dado para descontarle puntaje a " << nombres_jugadores[estatuillas[0] - 1] << endl;
     
     for(int i = 0; i < DADOS_MALDICION_CANGREJO; i++){
         dados_final[i] = tirar_dado(CARAS_MALDICION_CANGREJO);
@@ -477,7 +477,7 @@ void fase_final(string nombres_jugadores[], int const CANT_JUGADORES, int estatu
     
     mostrar_dados(dados_final, DADOS_MALDICION_CANGREJO, true);
 
-    cout << nombres_jugadores[estatuillas[1] - 1] << " tiene la maldicion de la hormiga. " << nombres_jugadores[turno_nuevo(estatuillas[1] - 1, CANT_JUGADORES) - 1] << " tira " << DADOS_MALDICION_HORMIGA << " dados para descontar puntaje de " << nombres_jugadores[estatuillas[1] - 1] << endl;
+    cout << nombres_jugadores[estatuillas[1] - 1] << " tiene la maldicion de la hormiga. " << nombres_jugadores[turno_nuevo(estatuillas[1], CANT_JUGADORES) - 1] << " tira " << DADOS_MALDICION_HORMIGA << " dados para descontarle puntaje a " << nombres_jugadores[estatuillas[1] - 1] << endl;
     
     for(int i = 0; i < DADOS_MALDICION_HORMIGA; i++){
         dados_final[i] = tirar_dado(CARAS_MALDICION_HORMIGA);
@@ -727,7 +727,7 @@ int jugador_inicial_exp(string nombres_jugadores[], int const CANT_JUGADORES){
         jugador_inicial = 2;
     }
 
-    cout << "¡Comienza " << nombres_jugadores[jugador_inicial - 1] << " la fase de expedicion por haber tirado el dado de menor valor!";
+    cout << "¡Comienza " << nombres_jugadores[jugador_inicial - 1] << " la fase de expedicion por haber tirado el dado de menor valor!" << endl;
 
     return jugador_inicial;
 }
