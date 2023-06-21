@@ -411,17 +411,8 @@ bool fin_de_fase_fin(int dados_final[], int cant_dds, int turno_actual, int port
     }
 
     if(gana_fase_fin == true){ // Informar ganador
-        cout << "Ganaste la fase final con los dados ";
-        for(int i = 0; i < CANT_DADOS_FINAL; i++){
-            cout << dados_final[i];
-            if(i < CANT_DADOS_FINAL - 2){
-                 cout << ", ";
-            } else if(i < CANT_DADOS_FINAL - 1){
-                cout << " y ";
-            } else{
-                cout << "." << endl;
-            }
-        }
+        cout << "Gana la fase final con los dados:" << endl;
+        mostrar_dados(dados_final, CANT_DADOS_FINAL, true);
     }
 
     return gana_fase_fin;
@@ -698,7 +689,7 @@ void fase_expedicion(string nombres_jugadores[], int const CANT_JUGADORES){
     int const TIROS_MALDICION_AGUILA = 2;
     int const TURNOS_MALDICION_MEDUSA = 3;
     int intentos[CANT_JUGADORES][CANT_ESTATUILLAS]; // Matriz que contiene las veces que un jugador eligio una estatuilla como objetivo. Cada fila representa un jugador. Cada columna representa una estatuilla.
-    int estatuillas[CANT_ESTATUILLAS] = {1,1,1,2,1}; // Array que tiene en cada componente a quien pertenece la estatuilla o tiene cero si nadie la tiene.
+    int estatuillas[CANT_ESTATUILLAS] = {}; // Array que tiene en cada componente a quien pertenece la estatuilla o tiene cero si nadie la tiene.
     int objetivos[CANT_JUGADORES]; // Array que tiene el objetivo de cada jugador por turno. Entero mayor que cero.
     int dados_exp[CANT_DADOS_EXP]; // Array de dados usados en fase de expedicion. Si el tercer dado no se usa, este debe valer cero.
     int turnos_perdidos = 0;
