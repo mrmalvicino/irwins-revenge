@@ -35,14 +35,14 @@ void dibujar_dado(int valor_del_dado, int posicion){
     for(int x = 1; x < LARGO; x++){ // Dibujar cuadrado
         for(int y = 1; y < ALTO; y++){
             rlutil::locate(x + LARGO * posicion, y + DESFASAJE);
-            cout << "█" << endl;
+            cout << "█" << endl; // En Windows reemplazar este "█" por char(219)
         }
     }
 
     switch (valor_del_dado){
         case 1:
             rlutil::locate(COL_2 + LARGO * posicion, FIL_2);
-            cout << "░░" << endl;
+            cout << "░░" << endl; // En Windows reemplazar todos los "░░" por "  "
             break;
 
         case 2:
@@ -449,7 +449,7 @@ void fase_final(string nombres_jugadores[], int const CANT_JUGADORES, int estatu
     int turno_actual = jugador_inicial_final(estatuillas, CANT_ESTATUILLAS, CANT_JUGADORES);
 
     do{
-        cout << nombres_jugadores[estatuillas[1] - 1] << " tiene la estatuilla de la hormiga. Elegir un numero del 1 al 6 para luego usar como reemplazo." << endl;
+        cout << nombres_jugadores[estatuillas[1] - 1] << " tiene la bendicion de la hormiga. Elegir un numero del 1 al 6 para luego usar como reemplazo." << endl;
         cin >> reemplazo_hormiga;
     } while(reemplazo_hormiga < 1 || 6 < reemplazo_hormiga);
 
@@ -467,7 +467,7 @@ void fase_final(string nombres_jugadores[], int const CANT_JUGADORES, int estatu
 
         if(turno_actual == estatuillas[1]){ // Si tiene hormiga, puede elegir un dado y cambiarlo por el reemplazo
             do{
-                cout << nombres_jugadores[turno_actual - 1] << " tiene la estatuilla de la hormiga. Elegir un dado para reemplazarlo por " << reemplazo_hormiga << ". ";
+                cout << nombres_jugadores[turno_actual - 1] << " tiene la bendicion de la hormiga. Elegir un dado para reemplazarlo por " << reemplazo_hormiga << ". ";
                 cout << "Ingresar 0 en caso de no querer cambiar ningun dado." << endl;
                 cin >> cambio_dado;
             } while(array_contiene_numero(dados_final, CANT_DADOS_FINAL, cambio_dado) == false && cambio_dado != 0);
@@ -484,7 +484,7 @@ void fase_final(string nombres_jugadores[], int const CANT_JUGADORES, int estatu
 
         if(turno_actual == estatuillas[3]){ // Si tiene aguila, puede elegir un dado y asignarle un nuevo valor
             do{
-                cout << nombres_jugadores[turno_actual - 1] << " tiene la estatuilla del aguila. Elegir un dado para cambiar su valor. Ingresar 0 en caso de no querer cambiar ningun dado." << endl;
+                cout << nombres_jugadores[turno_actual - 1] << " tiene la bendicion del aguila. Elegir un dado para cambiar su valor. Ingresar 0 en caso de no querer cambiar ningun dado." << endl;
                 cin >> cambio_dado;
             } while(array_contiene_numero(dados_final, CANT_DADOS_FINAL, cambio_dado) == false && cambio_dado != 0);
 
@@ -507,7 +507,7 @@ void fase_final(string nombres_jugadores[], int const CANT_JUGADORES, int estatu
 
         if(primer_tiro_cangrejo == false && turno_actual == estatuillas[0] && fin_de_fase_fin(dados_final, CANT_DADOS_FINAL, turno_actual, estatuillas[2], estatuillas[4]) == false){ // Si tiene cangrejo, no cambia el turno porque tira el jugador nuevamente
             primer_tiro_cangrejo = true;
-            cout << nombres_jugadores[turno_actual - 1] << " tira nuevamente por tener la estatuilla del cangrejo." << endl;
+            cout << nombres_jugadores[turno_actual - 1] << " tira nuevamente por tener la bendicion del cangrejo." << endl;
         } else{
             turno_actual = turno_nuevo(turno_actual, CANT_JUGADORES);
         }
@@ -742,7 +742,7 @@ void fase_expedicion(string nombres_jugadores[], int const CANT_JUGADORES){
 
         for(int i = 0; i < CANT_JUGADORES; i++){ // Cada jugador elige un objetivo
             if(estatuillas[2] == turno_actual && turnos_perdidos < TURNOS_MALDICION_MEDUSA){ // Si el jugador tiene la medusa, no elige objetivo por 3 turnos
-                cout << nombres_jugadores[turno_actual - 1] << " tiene la medusa y pierde los siguientes " << TURNOS_MALDICION_MEDUSA - turnos_perdidos << " turnos."  << endl;
+                cout << nombres_jugadores[turno_actual - 1] << " tiene la maldicion de la medusa y pierde los siguientes " << TURNOS_MALDICION_MEDUSA - turnos_perdidos << " turnos."  << endl;
             } else{
                 cout << "Turno de " << nombres_jugadores[turno_actual - 1] << endl;
                 
