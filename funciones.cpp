@@ -291,33 +291,33 @@ void puntos_de_victoria(string nombres_jugadores[], int const CANT_JUGADORES, in
     int const PDV_POR_GAN_PP = 50;
     int const PDV_POR_EST_RIVAL = 3;
     int const PDV_POR_LANZAM = 1;
-    int puntos_de_victoria[CANT_JUGADORES]; // Array acumulador de puntos. Cada componente tiene los puntos de cada jugador.
+    int pts_de_vic[CANT_JUGADORES]; // Array acumulador de puntos. Cada componente tiene los puntos de cada jugador.
 
     for(int i = 0; i < CANT_JUGADORES; i++){
-        puntos_de_victoria[i] = 0;
+        pts_de_vic[i] = 0;
     }
 
-    puntos_de_victoria[estatuillas[0] - 1] -= puntos_maldicion_cangrejo;
+    pts_de_vic[estatuillas[0] - 1] -= puntos_maldicion_cangrejo;
     cout << nombres_jugadores[estatuillas[0] - 1] << " perdio " << puntos_maldicion_cangrejo << " puntos por tener la maldicion del cangrejo." << endl;
     
-    puntos_de_victoria[estatuillas[1] - 1] -= puntos_maldicion_hormiga;
+    pts_de_vic[estatuillas[1] - 1] -= puntos_maldicion_hormiga;
     cout << nombres_jugadores[estatuillas[1] - 1] << " perdio " << puntos_maldicion_hormiga << " puntos por tener la maldicion de la hormiga." << endl;
 
     for(int i = 0; i < CANT_ESTATUILLAS; i++){ // OBTIENE ESTATUILLA
-        puntos_de_victoria[estatuillas[i] - 1] += PDV_POR_ESTAT;
+        pts_de_vic[estatuillas[i] - 1] += PDV_POR_ESTAT;
         cout << nombres_jugadores[estatuillas[i] - 1] << " gana " << PDV_POR_ESTAT << " puntos por haber obtenido la estatuilla de " << nombre_de_estatuilla(i, CANT_ESTATUILLAS) << "." << endl;
     }
 
     for(int i = 0; i < CANT_JUGADORES; i++){ // OBTIENE ESTATUILLA EN PRIMER INTENTO
         for(int j = 0; j < CANT_ESTATUILLAS; j++){
             if(intentos[i][j] == 1 && estatuillas[j] == i + 1){
-                puntos_de_victoria[i] += PDV_POR_EST_PP;
+                pts_de_vic[i] += PDV_POR_EST_PP;
                 cout << nombres_jugadores[i] << " gana " << PDV_POR_EST_PP << " puntos por haber obtenido la estatuilla de " << nombre_de_estatuilla(j, CANT_ESTATUILLAS) << " en el primer intento." << endl;
             }
         }
     }
 
-    puntos_de_victoria[ganador_fase_fin - 1] += PDV_POR_GANADOR; // GANADOR FASE FINAL
+    pts_de_vic[ganador_fase_fin - 1] += PDV_POR_GANADOR; // GANADOR FASE FINAL
     cout << nombres_jugadores[ganador_fase_fin - 1] << " gana " << PDV_POR_GANADOR << " puntos por haber ganado la fase final." << endl;
 
     for(int i = 0; i < CANT_JUGADORES; i++){ // GANADOR FASE FINAL SIN ESTATUILLAS
@@ -330,7 +330,7 @@ void puntos_de_victoria(string nombres_jugadores[], int const CANT_JUGADORES, in
         }
 
         if(gano_sin_ests == true){
-            puntos_de_victoria[i] += PDV_POR_GAN_PP;
+            pts_de_vic[i] += PDV_POR_GAN_PP;
             cout << nombres_jugadores[i] << " gana " << PDV_POR_GAN_PP << " puntos por haber ganado la fase final sin estatuillas en su inventario." << endl;
         }
     }
@@ -338,7 +338,7 @@ void puntos_de_victoria(string nombres_jugadores[], int const CANT_JUGADORES, in
     for(int i = 0; i < CANT_JUGADORES; i++){ // RIVAL OBTIENE ESTATUILLA
         for(int j = 0; j < CANT_ESTATUILLAS; j++){
             if(estatuillas[j] != i + 1){
-                puntos_de_victoria[i] -= PDV_POR_EST_RIVAL;
+                pts_de_vic[i] -= PDV_POR_EST_RIVAL;
                 cout << nombres_jugadores[i] << " pierde " << PDV_POR_EST_RIVAL << " puntos por no haber ganado la estatuilla de " << nombre_de_estatuilla(j, CANT_ESTATUILLAS) << "." << endl;
             }
         }
@@ -346,20 +346,20 @@ void puntos_de_victoria(string nombres_jugadores[], int const CANT_JUGADORES, in
 
     for(int i = 0; i < CANT_JUGADORES; i++){ // LANZADOR FASE FINAL
         if(jugador_inicial_final(estatuillas, CANT_ESTATUILLAS, CANT_JUGADORES) == i + 1){
-            puntos_de_victoria[i] -= PDV_POR_LANZAM;
+            pts_de_vic[i] -= PDV_POR_LANZAM;
             cout << nombres_jugadores[i] << " pierde " << PDV_POR_LANZAM << " punto por haber lanzado en fase final." << endl;
         }
     }
 
     for(int i = 0; i < CANT_JUGADORES; i++){
-        if(puntos_de_victoria[i] < 0){
-            puntos_de_victoria[i] = 0;
+        if(pts_de_vic[i] < 0){
+            pts_de_vic[i] = 0;
         }
-        cout << nombres_jugadores[i] << " obtuvo " << puntos_de_victoria[i] << " puntos de victoria." << endl;
+        cout << nombres_jugadores[i] << " obtuvo " << pts_de_vic[i] << " puntos de victoria." << endl;
     }
 
-    cout << nombres_jugadores[indice_max(puntos_de_victoria, CANT_JUGADORES)] << " gana!" << endl;
-
+    cout << endl << nombres_jugadores[indice_max(pts_de_vic, CANT_JUGADORES)] << " gana!" << endl;
+    ingresar_cero_para_continuar();
     system("clear");
     menu();
 }
