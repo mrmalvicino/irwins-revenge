@@ -819,7 +819,7 @@ void fase_expedicion(bool modo_aleatorio, string nombres_jugadores[], int const 
             if(estatuillas[2] == turno_actual && turnos_perdidos < TURNOS_MALDICION_MEDUSA){ // Si el jugador tiene la medusa, no tira por 3 turnos
                 tiros = 0;
                 turnos_perdidos ++;
-            } else if(estatuillas[3] != 0 && estatuillas[3] != turno_actual){ // Si el rival tiene el aguila, tiene 2 tiros
+            } else if(estatuillas[3] != 0 && estatuillas[3] != turno_actual){ // Si el rival tiene el aguila, el jugador actual tiene 2 tiros
                 tiros = TIROS_MALDICION_AGUILA;
             } else{
                 tiros = 1;
@@ -864,7 +864,7 @@ void menu_jugar(int const CANT_JUGADORES, int& max_pdv, string& max_jugador){
 
     if(nombres_jugadores[0] == "LAB1"){
         modo_aleatorio = 0;
-        cout << "Modo aleatorio desactivado. Los dados se ingresaran manualmente."
+        cout << "Modo aleatorio desactivado. Los dados se ingresaran manualmente." << endl;
     }
 
     fase_expedicion(modo_aleatorio, nombres_jugadores, CANT_JUGADORES, max_pdv, max_jugador);
