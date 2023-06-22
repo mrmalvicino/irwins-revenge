@@ -43,12 +43,12 @@ void dibujar_dado(int valor_del_dado, int posicion){
     string const PUNTO_DE_DADO = "░░"; // MacOs
     // string const FONDO_DE_DADO = char(219); // Windows
     // string const PUNTO_DE_DADO = "  "; // Windows
-    int const DESFASAJE = 5;
+    int const DESFASAJE_VERTICAL = 5;
     int const LARGO = 19;
     int const ALTO = 10;
-    int const FIL_1 = 2 + DESFASAJE;
-    int const FIL_2 = 5 + DESFASAJE;
-    int const FIL_3 = 8 + DESFASAJE;
+    int const FIL_1 = 2 + DESFASAJE_VERTICAL;
+    int const FIL_2 = 5 + DESFASAJE_VERTICAL;
+    int const FIL_3 = 8 + DESFASAJE_VERTICAL;
     int const COL_1 = 3;
     int const COL_2 = 9;
     int const COL_3 = 15;
@@ -56,7 +56,7 @@ void dibujar_dado(int valor_del_dado, int posicion){
 
     for(int x = 1; x < LARGO; x++){ // Dibujar cuadrado
         for(int y = 1; y < ALTO; y++){
-            rlutil::locate(x + LARGO * posicion, y + DESFASAJE);
+            rlutil::locate(x + LARGO * posicion, y + DESFASAJE_VERTICAL);
             cout << FONDO_DE_DADO << endl;
         }
     }
@@ -464,7 +464,7 @@ bool fin_de_fase_fin(int dados_final[], int cant_dds, int turno_actual, int port
     return gana_fase_fin;
 }
 
-void fase_final(string nombres_jugadores[], int const CANT_JUGADORES, int estatuillas[], int const CANT_ESTATUILLAS, int intentos[][5], int& max_pdv, string& max_jugador){ // Dimension de matriz hardcodeada para no usar constantes globales
+void fase_final(bool modo_aleatorio, string nombres_jugadores[], int const CANT_JUGADORES, int estatuillas[], int const CANT_ESTATUILLAS, int intentos[][5], int& max_pdv, string& max_jugador){ // Dimension de matriz hardcodeada para no usar constantes globales
     // Jugar fase final.
     
     int const CANT_DADOS_FINAL = 5;
@@ -485,7 +485,7 @@ void fase_final(string nombres_jugadores[], int const CANT_JUGADORES, int estatu
     cout << nombres_jugadores[estatuillas[0] - 1] << " tiene la maldicion del cangrejo. " << nombres_jugadores[turno_nuevo(estatuillas[0], CANT_JUGADORES) - 1] << " tira " << DADOS_MALDICION_CANGREJO << " dado para descontarle puntaje a " << nombres_jugadores[estatuillas[0] - 1] << endl;
     
     for(int i = 0; i < DADOS_MALDICION_CANGREJO; i++){
-        dados_final[i] = tirar_dado(CARAS_MALDICION_CANGREJO);
+        dados_final[i] = tirar_dado(CARAS_MALDICION_CANGREJO, modo_aleatorio);
         puntos_maldicion_cangrejo += dados_final[i];
     }
     
@@ -494,7 +494,7 @@ void fase_final(string nombres_jugadores[], int const CANT_JUGADORES, int estatu
     cout << nombres_jugadores[estatuillas[1] - 1] << " tiene la maldicion de la hormiga. " << nombres_jugadores[turno_nuevo(estatuillas[1], CANT_JUGADORES) - 1] << " tira " << DADOS_MALDICION_HORMIGA << " dados para descontarle puntaje a " << nombres_jugadores[estatuillas[1] - 1] << endl;
     
     for(int i = 0; i < DADOS_MALDICION_HORMIGA; i++){
-        dados_final[i] = tirar_dado(CARAS_MALDICION_HORMIGA);
+        dados_final[i] = tirar_dado(CARAS_MALDICION_HORMIGA, modo_aleatorio);
         puntos_maldicion_hormiga += dados_final[i];
     }
 
@@ -512,7 +512,7 @@ void fase_final(string nombres_jugadores[], int const CANT_JUGADORES, int estatu
         cout << endl << "Turno de " << nombres_jugadores[turno_actual - 1] << endl;
 
         for(int i = 0; i < CANT_DADOS_FINAL; i++){ // Cada jugador tira los dados
-            dados_final[i] = tirar_dado(CANT_CARAS_FINAL);
+            dados_final[i] = tirar_dado(CANT_CARAS_FINAL, modo_aleatorio);
         }
 
         mostrar_dados(dados_final, CANT_DADOS_FINAL, false);
@@ -707,17 +707,27 @@ void elegir_estatuillas_disponibles(int estatuillas[], int const CANT_ESTATUILLA
     }
 }
 
-int tirar_dado(int cant_caras){
-    // Devuelve un numero aleatorio con probabilidad de uno entre la cantidad de caras.
+int tirar_dado(int cant_caras, bool modo_aleatorio){
+    // Devuelve un numero aleatorio con probabilidad de uno entre la cantidad de caras. Si el modo aleatorio esta desactivado, los valores de los dados se pueden ingresar manualmente.
 
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<int> aleatorio(1, cant_caras);
+    int dado;
 
-    return aleatorio(gen);
+    if(modo_aleatorio == 1){
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<int> aleatorio(1, cant_caras);
+        dado = aleatorio(gen);
+    } else{
+        cout << "Ingresar valor del dado" << endl;
+        cin >> dado;
+        limpiar_terminal();
+    }
+
+
+    return dado;
 }
 
-int jugador_inicial_exp(string nombres_jugadores[], int const CANT_JUGADORES){
+int jugador_inicial_exp(bool modo_aleatorio, string nombres_jugadores[], int const CANT_JUGADORES){
     // Determina el jugador que comienza la fase de expedicion.
 
     int const CANT_DADOS_LANZ = 2;
@@ -727,7 +737,7 @@ int jugador_inicial_exp(string nombres_jugadores[], int const CANT_JUGADORES){
     while(dados_lanz[0] == dados_lanz[1]){
         limpiar_terminal();
         for(int i = 0; i < CANT_JUGADORES; i++){
-            dados_lanz[i] = tirar_dado(10);
+            dados_lanz[i] = tirar_dado(10, modo_aleatorio);
             cout << nombres_jugadores[i] << " tira el dado:" << endl;
             dibujar_dado(dados_lanz[i],0);
             ingresar_cero_para_continuar();
@@ -760,7 +770,7 @@ bool fin_de_fase_exp(int estatuillas[], int const CANT_ESTATUILLAS){
     return rtn;
 }
 
-void fase_expedicion(string nombres_jugadores[], int const CANT_JUGADORES, int& max_pdv, string& max_jugador){
+void fase_expedicion(bool modo_aleatorio, string nombres_jugadores[], int const CANT_JUGADORES, int& max_pdv, string& max_jugador){
     // Jugar fase de expedicion.
 
     int const CANT_ESTATUILLAS = 5;
@@ -769,12 +779,12 @@ void fase_expedicion(string nombres_jugadores[], int const CANT_JUGADORES, int& 
     int const TIROS_MALDICION_AGUILA = 2;
     int const TURNOS_MALDICION_MEDUSA = 3;
     int intentos[CANT_JUGADORES][CANT_ESTATUILLAS]; // Matriz que contiene las veces que un jugador eligio una estatuilla como objetivo. Cada fila representa un jugador. Cada columna representa una estatuilla.
-    int estatuillas[CANT_ESTATUILLAS] = {1,1,1,2,2}; // Array que tiene en cada componente a quien pertenece la estatuilla o tiene cero si nadie la tiene.
+    int estatuillas[CANT_ESTATUILLAS] = {}; // Array que tiene en cada componente a quien pertenece la estatuilla o tiene cero si nadie la tiene.
     int objetivos[CANT_JUGADORES]; // Array que tiene el objetivo de cada jugador por turno. Entero mayor que cero.
     int dados_exp[CANT_DADOS_EXP]; // Array de dados usados en fase de expedicion. Si el tercer dado no se usa, este debe valer cero.
     int turnos_perdidos = 0;
     int tiros;
-    int turno_actual = jugador_inicial_exp(nombres_jugadores, CANT_JUGADORES); // Numero de jugador al que le corresponde el turno. Entero mayor que cero.
+    int turno_actual = jugador_inicial_exp(modo_aleatorio, nombres_jugadores, CANT_JUGADORES); // Numero de jugador al que le corresponde el turno. Entero mayor que cero.
 
     for(int i = 0; i < CANT_JUGADORES; i++){
         for(int j = 0; j < CANT_ESTATUILLAS; j++){
@@ -817,7 +827,7 @@ void fase_expedicion(string nombres_jugadores[], int const CANT_JUGADORES, int& 
 
             for(int i = 0; i < tiros; i++){ // Tirar dados y guardar estatuilla si corresponde
                 for(int i = 0; i < CANT_DADOS_EXP; i++){
-                    dados_exp[i] = tirar_dado(CANT_CARAS_EXP);
+                    dados_exp[i] = tirar_dado(CANT_CARAS_EXP, modo_aleatorio);
                 }
 
                 if(estatuillas[4] == 0 || estatuillas[4] == turno_actual){ // Si nadie tiene la salamandra o la tiene el del turno, este tira dos dados
@@ -836,12 +846,13 @@ void fase_expedicion(string nombres_jugadores[], int const CANT_JUGADORES, int& 
         }
     }
 
-    fase_final(nombres_jugadores, CANT_JUGADORES, estatuillas, CANT_ESTATUILLAS, intentos, max_pdv, max_jugador);
+    fase_final(modo_aleatorio, nombres_jugadores, CANT_JUGADORES, estatuillas, CANT_ESTATUILLAS, intentos, max_pdv, max_jugador);
 }
 
 void menu_jugar(int const CANT_JUGADORES, int& max_pdv, string& max_jugador){
     // Iniciar nueva partida.
 
+    bool modo_aleatorio = 1;
     string nombres_jugadores[CANT_JUGADORES];
 
     cin.ignore(); // Ignora el enter de cin >> seleccion en menu();
@@ -851,7 +862,12 @@ void menu_jugar(int const CANT_JUGADORES, int& max_pdv, string& max_jugador){
         getline(cin, nombres_jugadores[i]);
     }
 
-    fase_expedicion(nombres_jugadores, CANT_JUGADORES, max_pdv, max_jugador);
+    if(nombres_jugadores[0] == "LAB1"){
+        modo_aleatorio = 0;
+        cout << "Modo aleatorio desactivado. Los dados se ingresaran manualmente."
+    }
+
+    fase_expedicion(modo_aleatorio, nombres_jugadores, CANT_JUGADORES, max_pdv, max_jugador);
 }
 
 void menu_estadisticas(int max_pdv, string max_jugador){
