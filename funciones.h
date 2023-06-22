@@ -1,6 +1,7 @@
 #include <iostream>
 using namespace std;
 
+void limpiar_terminal();
 void ingresar_cero_para_continuar();
 bool array_contiene_numero(int arr[], int tam, int num);
 void dibujar_dado(int valor_del_dado, int posicion);
@@ -25,6 +26,6 @@ int jugador_inicial_exp(string nombres_jugadores[], int const CANT_JUGADORES);
 bool fin_de_fase_exp(int estatuillas[], int const CANT_ESTATUILLAS);
 void fase_expedicion(string jugadores_menu[], int const CANT_JUGADORES);
 void menu_jugar(int const CANT_JUGADORES);
-void menu_estadisticas();
+void menu_estadisticas(int max_pdv, string max_pdv_jugador);
 void menu_creditos();
 void menu();

@@ -4,6 +4,13 @@ using namespace std;
 #include "funciones.h"
 #include "rlutil.h"
 
+void limpiar_terminal(){
+    // Limpia la terminal.
+
+    system("clear"); // MacOs
+    // system("cls"); // Windows
+}
+
 void ingresar_cero_para_continuar(){
     // Pausa el flujo del programa hasta que el usuario ingrese cero.
     
@@ -32,8 +39,10 @@ bool array_contiene_numero(int arr[], int tam, int num){
 void dibujar_dado(int valor_del_dado, int posicion){
     // Dibuja un dado de cierto valor. La posicion es un numero entero y varia horizontalmente.
 
-    string const FONDO_DE_DADO = "█"; // En Windows reemplazar "█" por char(219)
-    string const PUNTO_DE_DADO = "░░"; // En Windows reemplazar "░░" por "  "
+    string const FONDO_DE_DADO = "█"; // MacOs
+    string const PUNTO_DE_DADO = "░░"; // MacOs
+    // string const FONDO_DE_DADO = char(219); // Windows
+    // string const PUNTO_DE_DADO = "  "; // Windows
     int const DESFASAJE = 5;
     int const LARGO = 19;
     int const ALTO = 10;
@@ -55,187 +64,187 @@ void dibujar_dado(int valor_del_dado, int posicion){
     switch (valor_del_dado){
         case 1:
             rlutil::locate(COL_2 + LARGO * posicion, FIL_2);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
             break;
 
         case 2:
             rlutil::locate(COL_1 + LARGO * posicion, FIL_1);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
 
             rlutil::locate(COL_3 + LARGO * posicion, FIL_3);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
             break;
 
         case 3:
             rlutil::locate(COL_1 + LARGO * posicion, FIL_1);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
 
             rlutil::locate(COL_2 + LARGO * posicion, FIL_2);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
 
             rlutil::locate(COL_3 + LARGO * posicion, FIL_3);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
             break;
 
         case 4:
             rlutil::locate(COL_1 + LARGO * posicion, FIL_1);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
 
             rlutil::locate(COL_1 + LARGO * posicion, FIL_3);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
 
             rlutil::locate(COL_3 + LARGO * posicion, FIL_1);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
 
             rlutil::locate(COL_3 + LARGO * posicion, FIL_3);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
             break;
 
         case 5:
             rlutil::locate(COL_1 + LARGO * posicion, FIL_1);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
 
             rlutil::locate(COL_1 + LARGO * posicion, FIL_3);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
 
             rlutil::locate(COL_2 + LARGO * posicion, FIL_2);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
 
             rlutil::locate(COL_3 + LARGO * posicion, FIL_1);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
 
             rlutil::locate(COL_3 + LARGO * posicion, FIL_3);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
             break;
 
         case 6:
             rlutil::locate(COL_1 + LARGO * posicion, FIL_1);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
 
             rlutil::locate(COL_1 + LARGO * posicion, FIL_3);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
 
             rlutil::locate(COL_2 + LARGO * posicion, FIL_1);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
 
             rlutil::locate(COL_2 + LARGO * posicion, FIL_3);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
 
             rlutil::locate(COL_3 + LARGO * posicion, FIL_1);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
 
             rlutil::locate(COL_3 + LARGO * posicion, FIL_3);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
             break;
         
         case 7:
             rlutil::locate(COL_1 + LARGO * posicion, FIL_1);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
 
             rlutil::locate(COL_1 + LARGO * posicion, FIL_3);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
 
             rlutil::locate(COL_2 + LARGO * posicion, FIL_1);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
 
             rlutil::locate(COL_2 + LARGO * posicion, FIL_2);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
 
             rlutil::locate(COL_2 + LARGO * posicion, FIL_3);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
 
             rlutil::locate(COL_3 + LARGO * posicion, FIL_1);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
 
             rlutil::locate(COL_3 + LARGO * posicion, FIL_3);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
             break;
 
         case 8:
             rlutil::locate(COL_1 + LARGO * posicion, FIL_1);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
 
             rlutil::locate(COL_1 + LARGO * posicion, FIL_2);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
 
             rlutil::locate(COL_1 + LARGO * posicion, FIL_3);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
 
             rlutil::locate(COL_2 + LARGO * posicion, FIL_1);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
 
             rlutil::locate(COL_2 + LARGO * posicion, FIL_3);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
 
             rlutil::locate(COL_3 + LARGO * posicion, FIL_1);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
 
             rlutil::locate(COL_3 + LARGO * posicion, FIL_2);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
 
             rlutil::locate(COL_3 + LARGO * posicion, FIL_3);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
             break;
 
         case 9:
             rlutil::locate(COL_1 + LARGO * posicion, FIL_1);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
 
             rlutil::locate(COL_1 + LARGO * posicion, FIL_2);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
 
             rlutil::locate(COL_1 + LARGO * posicion, FIL_3);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
 
             rlutil::locate(COL_2 + LARGO * posicion, FIL_1);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
 
             rlutil::locate(COL_2 + LARGO * posicion, FIL_2);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
 
             rlutil::locate(COL_2 + LARGO * posicion, FIL_3);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
 
             rlutil::locate(COL_3 + LARGO * posicion, FIL_1);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
 
             rlutil::locate(COL_3 + LARGO * posicion, FIL_2);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
 
             rlutil::locate(COL_3 + LARGO * posicion, FIL_3);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
             break;
 
         case 10:
             rlutil::locate(COL_1 + LARGO * posicion, FIL_1);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
 
             rlutil::locate(COL_1 + LARGO * posicion, FIL_2);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
 
             rlutil::locate(COL_1 + LARGO * posicion, FIL_3);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
 
             rlutil::locate(COL_2 + LARGO * posicion, FIL_1);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
 
             rlutil::locate(7 + LARGO * posicion, FIL_2);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
 
             rlutil::locate(11 + LARGO * posicion, FIL_2);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
 
             rlutil::locate(COL_2 + LARGO * posicion, FIL_3);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
 
             rlutil::locate(COL_3 + LARGO * posicion, FIL_1);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
 
             rlutil::locate(COL_3 + LARGO * posicion, FIL_2);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
 
             rlutil::locate(COL_3 + LARGO * posicion, FIL_3);
-            cout << "░░" << endl;
+            cout << PUNTO_DE_DADO << endl;
             break;
     }
 
@@ -262,7 +271,7 @@ void mostrar_dados(int dados[], int const CANT_DADOS, bool clear_cls){
     ingresar_cero_para_continuar();
     
     if(clear_cls == true){
-        system("clear");
+        limpiar_terminal();
     }
 }
 
@@ -360,7 +369,7 @@ void puntos_de_victoria(string nombres_jugadores[], int const CANT_JUGADORES, in
 
     cout << endl << nombres_jugadores[indice_max(pts_de_vic, CANT_JUGADORES)] << " gana!" << endl;
     ingresar_cero_para_continuar();
-    system("clear");
+    limpiar_terminal();
     menu();
 }
 
@@ -491,7 +500,7 @@ void fase_final(string nombres_jugadores[], int const CANT_JUGADORES, int estatu
         cin >> reemplazo_hormiga;
     } while(reemplazo_hormiga < 1 || 6 < reemplazo_hormiga);
 
-    system("clear");
+    limpiar_terminal();
     cout << endl << "¡Comienza la fase final!" << endl;
 
     do{ // Tirar mientras no salga escalera
@@ -541,7 +550,7 @@ void fase_final(string nombres_jugadores[], int const CANT_JUGADORES, int estatu
         }
 
         ganador_fase_fin = turno_actual;
-        system("clear");
+        limpiar_terminal();
 
         if(primer_tiro_cangrejo == false && turno_actual == estatuillas[0] && fin_de_fase_fin(dados_final, CANT_DADOS_FINAL, turno_actual, estatuillas[2], estatuillas[4]) == false){ // Si tiene cangrejo, no cambia el turno porque tira el jugador nuevamente
             primer_tiro_cangrejo = true;
@@ -630,7 +639,7 @@ bool guardar_inventario(int dados_exp[], int objetivos[], int const CANT_ESTATUI
         rtn = true;
         cout << endl << "Ganaste la estatuilla de " << nombre_de_estatuilla(objetivos[turno_actual - 1] - 1, CANT_ESTATUILLAS) << endl;
         ingresar_cero_para_continuar();
-        system("clear");
+        limpiar_terminal();
     }
 
     return rtn;
@@ -711,13 +720,13 @@ int jugador_inicial_exp(string nombres_jugadores[], int const CANT_JUGADORES){
     int dados_lanz[CANT_DADOS_LANZ] = {};
 
     while(dados_lanz[0] == dados_lanz[1]){
-        system("clear");
+        limpiar_terminal();
         for(int i = 0; i < CANT_JUGADORES; i++){
             dados_lanz[i] = tirar_dado(10);
             cout << nombres_jugadores[i] << " tira el dado:" << endl;
             dibujar_dado(dados_lanz[i],0);
             ingresar_cero_para_continuar();
-            system("clear");
+            limpiar_terminal();
         }
     }
 
@@ -789,7 +798,7 @@ void fase_expedicion(string nombres_jugadores[], int const CANT_JUGADORES){
             turno_actual = turno_nuevo(turno_actual, CANT_JUGADORES);
         }
 
-        system("clear");
+        limpiar_terminal();
 
         for(int i = 0; i < CANT_JUGADORES; i++){ // Cada jugador tira los dados
             if(estatuillas[2] == turno_actual && turnos_perdidos < TURNOS_MALDICION_MEDUSA){ // Si el jugador tiene la medusa, no tira por 3 turnos
@@ -826,7 +835,7 @@ void fase_expedicion(string nombres_jugadores[], int const CANT_JUGADORES){
 }
 
 void menu_jugar(int const CANT_JUGADORES){
-    // Opcion del menu.
+    // Iniciar nueva partida.
 
     string nombres_jugadores[CANT_JUGADORES];
 
@@ -840,23 +849,35 @@ void menu_jugar(int const CANT_JUGADORES){
     fase_expedicion(nombres_jugadores, CANT_JUGADORES);
 }
 
-void menu_estadisticas(){
-    // Opcion del menu.
+void menu_estadisticas(int max_pdv, string max_pdv_jugador){
+    // Mostrar el jugador que mayor puntos de victoria haya obtenido.
+
+    limpiar_terminal();
+    cout << max_pdv_jugador << ":\t" << max_pdv << " PDV" << endl;
+    ingresar_cero_para_continuar();
+    limpiar_terminal();
+    menu();
 }
 
 void menu_creditos(){
     // Opcion del menu.
 
-    cout << "Irwin's Revenge es un juego creado por Gonzalo Ligero." << endl;
+    limpiar_terminal();
+    cout << "Irwin's Revenge es un juego creado por Gonzalo Ligero." << endl << endl;
     cout << "El equipo de desarrolladores Algoritmos Anidados esta conformado por:" << endl;
     cout << "- Malvicino, Maximiliano (Legajo 28825)" << endl;
-    cout << "- Serman, Guido (Legajo 28842)" << endl;
-
+    cout << "- Serman, Guido (Legajo 28842)" << endl << endl;
+    ingresar_cero_para_continuar();
+    limpiar_terminal();
     menu();
 }
 
 void menu(){
     // Menu principal.
+
+    int const CANT_JUGADORES = 2;
+    int max_pdv = 0;
+    string max_pdv_jugador = "Todavia no se registran partidas";
 
     int seleccion;
     cout << "-----------------------" << endl;
@@ -873,8 +894,6 @@ void menu(){
         cin >> seleccion;
     } while (seleccion < 0 || 3 < seleccion);
 
-    int const CANT_JUGADORES = 2;
-
     switch(seleccion){
         case 0:
             break;
@@ -882,7 +901,7 @@ void menu(){
             menu_jugar(CANT_JUGADORES);
             break;
         case 2:
-            menu_estadisticas();
+            menu_estadisticas(max_pdv, max_pdv_jugador);
             break;
         case 3:
             menu_creditos();

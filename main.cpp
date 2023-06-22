@@ -3,7 +3,7 @@ using namespace std;
 #include "funciones.h"
 
 int main(){
-    system("clear");
+    limpiar_terminal();
     menu();
 }
 
