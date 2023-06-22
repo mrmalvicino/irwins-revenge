@@ -680,8 +680,6 @@ string nombre_de_estatuilla(int numero_de_estat, int const CANT_ESTATUILLAS){
 void mostrar_inventario(string nombres_jugadores[], int const CANT_JUGADORES, int estatuillas[], int const CANT_ESTATUILLAS){
     // Muestra las estatuillas adquiridas por cada jugador hasta el momento.
 
-    cout << endl;
-
     for(int i = 0; i < CANT_JUGADORES; i++){
         cout << "Inventario de " << nombres_jugadores[i] << ":" << endl;
 
@@ -718,7 +716,7 @@ int tirar_dado(int cant_caras, bool modo_aleatorio){
         std::uniform_int_distribution<int> aleatorio(1, cant_caras);
         dado = aleatorio(gen);
     } else{
-        cout << "Ingresar valor del dado" << endl;
+        cout << "Ingresar valor de dado:" << endl;
         cin >> dado;
         limpiar_terminal();
     }
@@ -752,6 +750,8 @@ int jugador_inicial_exp(bool modo_aleatorio, string nombres_jugadores[], int con
     }
 
     cout << "¡Comienza " << nombres_jugadores[jugador_inicial - 1] << " la fase de expedicion por haber tirado el dado de menor valor!" << endl;
+    ingresar_cero_para_continuar();
+    limpiar_terminal();
 
     return jugador_inicial;
 }
@@ -833,7 +833,7 @@ void fase_expedicion(bool modo_aleatorio, string nombres_jugadores[], int const 
                 cant_dds_exp = CANT_DADOS_EXP;
             }
 
-            for(int i = 0; i < tiros; i++){ // Tirar dados y guardar estatuilla si corresponde
+            for(int i = 0; i < tiros; i++){ // Hacer tantos tiros de tantos dados y guardar estatuilla si corresponde
                 for(int i = 0; i < cant_dds_exp; i++){
                     dados_exp[i] = tirar_dado(CANT_CARAS_EXP, modo_aleatorio);
                 }
@@ -859,6 +859,7 @@ void menu_jugar(int const CANT_JUGADORES, int& max_pdv, string& max_jugador){
     bool modo_aleatorio = 1;
     string nombres_jugadores[CANT_JUGADORES];
 
+    limpiar_terminal();
     cin.ignore(); // Ignora el enter de cin >> seleccion en menu();
 
     for(int i = 0; i < CANT_JUGADORES; i++){
@@ -871,6 +872,7 @@ void menu_jugar(int const CANT_JUGADORES, int& max_pdv, string& max_jugador){
         cout << "Modo aleatorio desactivado. Los dados se ingresaran manualmente." << endl;
     }
 
+    ingresar_cero_para_continuar();
     fase_expedicion(modo_aleatorio, nombres_jugadores, CANT_JUGADORES, max_pdv, max_jugador);
 }
 
