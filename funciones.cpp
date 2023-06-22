@@ -11,21 +11,14 @@ void limpiar_terminal(){
     // system("cls"); // Windows
 }
 
-void ingresar_cero_para_continuar(){
+void pausar_terminal(){
     // Pausa el flujo del programa hasta que el usuario ingrese cero.
     
     int aux = -1;
 
     do{
-        cout << "Ingresar 0 para continuar o 1 para ver las caracteristicas de las estatuillas." << endl;
+        cout << "Ingresar 0 para continuar." << endl;
         cin >> aux;
-        
-        while(aux == 1){
-            string reglas = "Estatuilla del cangrejo:\n\tObtención: Uno de sus dados debe ser par y otro de sus dados impar.\n\tBendición (En fase final): Podrá lanzar los dados dos veces en el primer tiro de la fase final.\n\tMaldición (En fase expedición): El rival tira un dado de diez caras y el valor obtenido son los puntos de victoria que le descuenta al portador de la estatuilla al final de la partida.\nEstatuilla de la hormiga:\n\tObtención: Al menos dos dados deben ser menores a 5.\n\tBendición (En fase final): Antes de empezar la fase final el portador de la estatuilla puede elegir un número del 1 al 6. Luego, en cada tiro puede optar por elegir uno de los cinco dados del lanzamiento y reemplazarlo por el número elegido.\n\tMaldición (En fase expedición): El rival tira dos dados de diez caras y el valor obtenido son los puntos de victoria que le descuenta al portador de la estatuilla al final de la partida.\nEstatuilla de la medusa:\n\tObtención: La suma de dos de los dados lanzados debe dar exactamente siete.\n\tBendición (En fase final): Permite ganar el desafío de la Fase Final también con la obtención de 5 dados iguales.\n\tMaldición (En fase expedición): El portador de la estatuilla debe esperar 3 turnos sin lanzar dados para seguir la Fase de Expedición.\nEstatuilla del águila:\n\tObtención: Dos de los dados lanzados deberán devolver los números 1 y 10.\n\tBendición (En fase final): En cada tirada de la Fase Final el portador de la estatuilla podrá elegir un dado y modificar su número a su antojo.\n\tMaldición (En fase expedición): El rival tira dos veces por turno durante el resto de la Fase de Expedición.\nEstatuilla de la salamandra:\n\tObtención: Los dados lanzados deben ser consecutivos. Por ejemplo: (1 y 2) (2 y 3) (9 y 10).\n\tBendición (En fase final): El portador de la estatuilla podrá ganar la fase final con una escalera de 4 dados consecutivos entre 5 dados lanzados.\n\tMaldición (En fase expedición): El rival juega con tres dados durante el resto de la Fase de Expedición.\n";
-            cout << reglas << endl;
-            cout << "Ingresar 0 para continuar o 1 para ver las caracteristicas de las estatuillas." << endl;
-            cin >> aux;
-        }
     } while(aux != 0);
 }
 
@@ -44,16 +37,31 @@ void dibujar_dado(int valor_del_dado, int posicion, int desfasaje_vertical){
     int const COL_1 = 3;
     int const COL_2 = 9;
     int const COL_3 = 15;
+    int const MARGEN_DERECHO = 1;
+    int margen_vertical;
     int mostrar_lineas;
 
-    for(int x = 1; x < LARGO; x++){ // Dibujar cuadrado
+    if(desfasaje_vertical == 0){ // Si el dibujo comienza en primera linea, no puede haber margen.
+        margen_vertical = 0;
+    } else{
+        margen_vertical = 1;
+    }
+
+    for(int x = 1; x < LARGO + MARGEN_DERECHO; x++){ // Limpiar terminal para ubicar cuadrado dentro del margen.
+        for(int y = 1; y < ALTO + 2 * margen_vertical; y++){
+            rlutil::locate(x + LARGO * posicion, y + desfasaje_vertical - margen_vertical);
+            cout << " " << endl;
+        }
+    }
+
+    for(int x = 1; x < LARGO; x++){ // Dibujar cuadrado.
         for(int y = 1; y < ALTO; y++){
             rlutil::locate(x + LARGO * posicion, y + desfasaje_vertical);
             cout << FONDO_DE_DADO << endl;
         }
     }
 
-    switch (valor_del_dado){
+    switch (valor_del_dado){ // Dibujar puntos segun el valor del dado.
         case 1:
             rlutil::locate(COL_2 + LARGO * posicion, FIL_2);
             cout << PUNTO_DE_DADO << endl;
@@ -260,7 +268,7 @@ void mostrar_dados(int dados[], int const CANT_DADOS, bool clear_cls, int desfas
         }
     }
 
-    ingresar_cero_para_continuar();
+    pausar_terminal();
     
     if(clear_cls == true){
         limpiar_terminal();
@@ -409,7 +417,7 @@ void puntos_de_victoria(string nombres_jugadores[], int const CANT_JUGADORES, in
     }
 
     cout << endl << nombres_jugadores[indice_max(pts_de_vic, CANT_JUGADORES)] << " gana!" << endl;
-    ingresar_cero_para_continuar();
+    pausar_terminal();
     limpiar_terminal();
     menu(max_pdv, max_jugador);
 }
@@ -494,7 +502,7 @@ bool fin_de_fase_fin(int dados_final[], int cant_dds, int turno_actual, int port
 
     if(gana_fase_fin == true){ // Informar ganador
         cout << "Gana la fase final con los dados:" << endl;
-        mostrar_dados(dados_final, CANT_DADOS_FINAL, true, 5);
+        mostrar_dados(dados_final, CANT_DADOS_FINAL, true, 2);
     }
 
     return gana_fase_fin;
@@ -509,7 +517,7 @@ void fase_final(bool modo_aleatorio, string nombres_jugadores[], int const CANT_
     int const CARAS_MALDICION_CANGREJO = 10;
     int const DADOS_MALDICION_HORMIGA = 2;
     int const CARAS_MALDICION_HORMIGA = 10;
-    int const LINEAS_TERMINAL_FASE_FIN = 5;
+    int const LINEAS_TERMINAL_FASE_FIN = 7;
     int dados_final[CANT_DADOS_FINAL] = {};
     int ganador_fase_fin;
     int puntos_maldicion_cangrejo = 0;
@@ -526,7 +534,7 @@ void fase_final(bool modo_aleatorio, string nombres_jugadores[], int const CANT_
         puntos_maldicion_cangrejo += dados_final[i];
     }
     
-    mostrar_dados(dados_final, DADOS_MALDICION_CANGREJO, true, LINEAS_TERMINAL_FASE_FIN);
+    mostrar_dados(dados_final, DADOS_MALDICION_CANGREJO, true, 2);
 
     cout << nombres_jugadores[estatuillas[1] - 1] << " tiene la maldicion de la hormiga. " << nombres_jugadores[turno_nuevo(estatuillas[1], CANT_JUGADORES) - 1] << " tira " << DADOS_MALDICION_HORMIGA << " dados para descontarle puntaje a " << nombres_jugadores[estatuillas[1] - 1] << endl;
     
@@ -535,7 +543,7 @@ void fase_final(bool modo_aleatorio, string nombres_jugadores[], int const CANT_
         puntos_maldicion_hormiga += dados_final[i];
     }
 
-    mostrar_dados(dados_final, DADOS_MALDICION_HORMIGA, true, LINEAS_TERMINAL_FASE_FIN);
+    mostrar_dados(dados_final, DADOS_MALDICION_HORMIGA, true, 2);
 
     do{
         cout << nombres_jugadores[estatuillas[1] - 1] << " tiene la bendicion de la hormiga. Elegir un numero del 1 al 6 para luego usar como reemplazo." << endl;
@@ -543,16 +551,19 @@ void fase_final(bool modo_aleatorio, string nombres_jugadores[], int const CANT_
     } while(reemplazo_hormiga < 1 || 6 < reemplazo_hormiga);
 
     limpiar_terminal();
-    cout << endl << "¡Comienza la fase final!" << endl;
+    cout << "¡Comienza " << nombres_jugadores[turno_actual - 1] << " la fase final por haber obtenido la mayor cantidad de estatuillas!" << endl;
+    pausar_terminal();
+    limpiar_terminal();
 
     do{ // Tirar mientras no salga escalera
-        cout << endl << "Turno de " << nombres_jugadores[turno_actual - 1] << endl;
+        mostrar_inventario(nombres_jugadores, CANT_JUGADORES, estatuillas, CANT_ESTATUILLAS);
+        cout << "Turno de " << nombres_jugadores[turno_actual - 1] << endl << endl;
 
         for(int i = 0; i < CANT_DADOS_FINAL; i++){ // Cada jugador tira los dados
             dados_final[i] = tirar_dado(CANT_CARAS_FINAL, modo_aleatorio);
         }
 
-        mostrar_dados(dados_final, CANT_DADOS_FINAL, false, LINEAS_TERMINAL_FASE_FIN);
+        mostrar_dados(dados_final, CANT_DADOS_FINAL, false, LINEAS_TERMINAL_FASE_FIN + array_cuantos_repite(estatuillas, CANT_ESTATUILLAS));
 
         if(turno_actual == estatuillas[1]){ // Si tiene hormiga, puede elegir un dado y cambiarlo por el reemplazo
             do{
@@ -680,7 +691,7 @@ bool guardar_inventario(int dados_exp[], int objetivos[], int const CANT_ESTATUI
     if(ests_coinciden[objetivos[turno_actual - 1] - 1] == 1){
         rtn = true;
         cout << endl << "Ganaste la estatuilla de " << nombre_de_estatuilla(objetivos[turno_actual - 1] - 1, CANT_ESTATUILLAS) << endl;
-        ingresar_cero_para_continuar();
+        pausar_terminal();
         limpiar_terminal();
     }
 
@@ -755,7 +766,6 @@ int tirar_dado(int cant_caras, bool modo_aleatorio){
     } else{
         cout << "Ingresar valor de dado:" << endl;
         cin >> dado;
-        limpiar_terminal();
     }
 
 
@@ -775,7 +785,7 @@ int jugador_inicial_exp(bool modo_aleatorio, string nombres_jugadores[], int con
             dados_lanz[i] = tirar_dado(10, modo_aleatorio);
             cout << nombres_jugadores[i] << " tira el dado:" << endl;
             dibujar_dado(dados_lanz[i],0, 2);
-            ingresar_cero_para_continuar();
+            pausar_terminal();
             limpiar_terminal();
         }
     }
@@ -787,7 +797,7 @@ int jugador_inicial_exp(bool modo_aleatorio, string nombres_jugadores[], int con
     }
 
     cout << "¡Comienza " << nombres_jugadores[jugador_inicial - 1] << " la fase de expedicion por haber tirado el dado de menor valor!" << endl;
-    ingresar_cero_para_continuar();
+    pausar_terminal();
     limpiar_terminal();
 
     return jugador_inicial;
@@ -815,7 +825,7 @@ void fase_expedicion(bool modo_aleatorio, string nombres_jugadores[], int const 
     int const CANT_CARAS_EXP = 10;
     int const TIROS_MALDICION_AGUILA = 2;
     int const TURNOS_MALDICION_MEDUSA = 3;
-    int const LINEAS_TERMINAL_FASE_EXP = 6;
+    int const LINEAS_TERMINAL_FASE_EXP = 5;
     int intentos[CANT_JUGADORES][CANT_ESTATUILLAS]; // Matriz que contiene las veces que un jugador eligio una estatuilla como objetivo. Cada fila representa un jugador. Cada columna representa una estatuilla.
     int estatuillas[CANT_ESTATUILLAS] = {}; // Array que tiene en cada componente a quien pertenece la estatuilla o tiene cero si nadie la tiene.
     int objetivos[CANT_JUGADORES]; // Array que tiene el objetivo de cada jugador por turno. Entero mayor que cero.
@@ -837,7 +847,7 @@ void fase_expedicion(bool modo_aleatorio, string nombres_jugadores[], int const 
 
             if(estatuillas[2] == turno_actual && turnos_perdidos < TURNOS_MALDICION_MEDUSA){ // Si el jugador tiene la medusa, no elige objetivo por 3 turnos
                 cout << nombres_jugadores[turno_actual - 1] << " tiene la maldicion de la medusa y pierde los siguientes " << TURNOS_MALDICION_MEDUSA - turnos_perdidos << " turnos."  << endl;
-                ingresar_cero_para_continuar();
+                pausar_terminal();
             } else{
                 cout << "Turno de " << nombres_jugadores[turno_actual - 1] << endl;
                 
@@ -874,7 +884,7 @@ void fase_expedicion(bool modo_aleatorio, string nombres_jugadores[], int const 
 
             for(int i = 0; i < tiros; i++){ // Hacer tantos tiros de tantos dados y guardar estatuilla si corresponde
                 mostrar_inventario(nombres_jugadores, CANT_JUGADORES, estatuillas, CANT_ESTATUILLAS);
-                cout << "Turno de " << nombres_jugadores[turno_actual - 1] << endl;
+                cout << "Turno de " << nombres_jugadores[turno_actual - 1] << endl << endl;
 
                 for(int i = 0; i < cant_dds_exp; i++){
                     dados_exp[i] = tirar_dado(CANT_CARAS_EXP, modo_aleatorio);
@@ -914,7 +924,7 @@ void menu_jugar(int const CANT_JUGADORES, int& max_pdv, string& max_jugador){
         cout << "Modo aleatorio desactivado. Los dados se ingresaran manualmente." << endl;
     }
 
-    ingresar_cero_para_continuar();
+    pausar_terminal();
     fase_expedicion(modo_aleatorio, nombres_jugadores, CANT_JUGADORES, max_pdv, max_jugador);
 }
 
@@ -923,7 +933,7 @@ void menu_estadisticas(int max_pdv, string max_jugador){
 
     limpiar_terminal();
     cout << max_jugador << ":\t" << max_pdv << " PDV" << endl;
-    ingresar_cero_para_continuar();
+    pausar_terminal();
     limpiar_terminal();
     menu(max_pdv, max_jugador);
 }
@@ -936,7 +946,7 @@ void menu_creditos(int max_pdv, string max_jugador){
     cout << "El equipo de desarrolladores Algoritmos Anidados esta conformado por:" << endl;
     cout << "- Malvicino, Maximiliano (Legajo 28825)" << endl;
     cout << "- Serman, Guido (Legajo 28842)" << endl << endl;
-    ingresar_cero_para_continuar();
+    pausar_terminal();
     limpiar_terminal();
     menu(max_pdv, max_jugador);
 }

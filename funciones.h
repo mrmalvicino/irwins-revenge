@@ -2,7 +2,7 @@
 using namespace std;
 
 void limpiar_terminal();
-void ingresar_cero_para_continuar();
+void pausar_terminal();
 void dibujar_dado(int valor_del_dado, int posicion, int desfasaje_vertical);
 void mostrar_dados(int dados[], int const CANT_DADOS, bool clear_cls, int desfasaje_vertical);
 int array_cuantos_repite(int arr[], int tam);
