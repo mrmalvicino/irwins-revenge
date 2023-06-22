@@ -774,7 +774,7 @@ void fase_expedicion(bool modo_aleatorio, string nombres_jugadores[], int const 
     // Jugar fase de expedicion.
 
     int const CANT_ESTATUILLAS = 5;
-    int const CANT_DADOS_EXP = 3;
+    int const CANT_DADOS_EXP = 3; // Cantidad maxima de dados que un jugador puede tirar en un tiro en la fase de expedicion.
     int const CANT_CARAS_EXP = 10;
     int const TIROS_MALDICION_AGUILA = 2;
     int const TURNOS_MALDICION_MEDUSA = 3;
@@ -782,6 +782,7 @@ void fase_expedicion(bool modo_aleatorio, string nombres_jugadores[], int const 
     int estatuillas[CANT_ESTATUILLAS] = {}; // Array que tiene en cada componente a quien pertenece la estatuilla o tiene cero si nadie la tiene.
     int objetivos[CANT_JUGADORES]; // Array que tiene el objetivo de cada jugador por turno. Entero mayor que cero.
     int dados_exp[CANT_DADOS_EXP]; // Array de dados usados en fase de expedicion. Si el tercer dado no se usa, este debe valer cero.
+    int cant_dds_exp; // Cantidad de dados que le corresponde tirar a un jugador segun el rival tenga o no la salamandra.
     int turnos_perdidos = 0;
     int tiros;
     int turno_actual = jugador_inicial_exp(modo_aleatorio, nombres_jugadores, CANT_JUGADORES); // Numero de jugador al que le corresponde el turno. Entero mayor que cero.
@@ -825,17 +826,20 @@ void fase_expedicion(bool modo_aleatorio, string nombres_jugadores[], int const 
                 tiros = 1;
             }
 
-            for(int i = 0; i < tiros; i++){ // Tirar dados y guardar estatuilla si corresponde
-                for(int i = 0; i < CANT_DADOS_EXP; i++){
-                    dados_exp[i] = tirar_dado(CANT_CARAS_EXP, modo_aleatorio);
-                }
+            if(estatuillas[4] == 0 || estatuillas[4] == turno_actual){ // Si nadie tiene la salamandra o la tiene el del turno, este tira dos dados
+                dados_exp[2] = 0;
+                cant_dds_exp = 2;
+            } else{
+                cant_dds_exp = CANT_DADOS_EXP;
+            }
 
-                if(estatuillas[4] == 0 || estatuillas[4] == turno_actual){ // Si nadie tiene la salamandra o la tiene el del turno, este tira dos dados
-                    dados_exp[2] = 0;
+            for(int i = 0; i < tiros; i++){ // Tirar dados y guardar estatuilla si corresponde
+                for(int i = 0; i < cant_dds_exp; i++){
+                    dados_exp[i] = tirar_dado(CANT_CARAS_EXP, modo_aleatorio);
                 }
                 
                 cout << nombres_jugadores[turno_actual-1] << " tira los dados:" << endl;
-                mostrar_dados(dados_exp, CANT_DADOS_EXP, true);
+                mostrar_dados(dados_exp, cant_dds_exp, true);
                 
                 if(estatuillas[objetivos[turno_actual - 1] - 1] == 0 && guardar_inventario(dados_exp, objetivos, CANT_ESTATUILLAS, turno_actual) == 1){
                     estatuillas[objetivos[turno_actual - 1] - 1] = turno_actual;
