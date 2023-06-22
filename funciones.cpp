@@ -14,11 +14,18 @@ void limpiar_terminal(){
 void ingresar_cero_para_continuar(){
     // Pausa el flujo del programa hasta que el usuario ingrese cero.
     
-    int aux = 1;
+    int aux = -1;
 
     do{
-        cout << "Ingresar 0 para continuar" << endl;
+        cout << "Ingresar 0 para continuar o 1 para ver las caracteristicas de las estatuillas." << endl;
         cin >> aux;
+        
+        while(aux == 1){
+            string reglas = "Estatuilla del cangrejo:\n\tObtención: Uno de sus dados debe ser par y otro de sus dados impar.\n\tBendición (En fase final): Podrá lanzar los dados dos veces en el primer tiro de la fase final.\n\tMaldición (En fase expedición): El rival tira un dado de diez caras y el valor obtenido son los puntos de victoria que le descuenta al portador de la estatuilla al final de la partida.\nEstatuilla de la hormiga:\n\tObtención: Al menos dos dados deben ser menores a 5.\n\tBendición (En fase final): Antes de empezar la fase final el portador de la estatuilla puede elegir un número del 1 al 6. Luego, en cada tiro puede optar por elegir uno de los cinco dados del lanzamiento y reemplazarlo por el número elegido.\n\tMaldición (En fase expedición): El rival tira dos dados de diez caras y el valor obtenido son los puntos de victoria que le descuenta al portador de la estatuilla al final de la partida.\nEstatuilla de la medusa:\n\tObtención: La suma de dos de los dados lanzados debe dar exactamente siete.\n\tBendición (En fase final): Permite ganar el desafío de la Fase Final también con la obtención de 5 dados iguales.\n\tMaldición (En fase expedición): El portador de la estatuilla debe esperar 3 turnos sin lanzar dados para seguir la Fase de Expedición.\nEstatuilla del águila:\n\tObtención: Dos de los dados lanzados deberán devolver los números 1 y 10.\n\tBendición (En fase final): En cada tirada de la Fase Final el portador de la estatuilla podrá elegir un dado y modificar su número a su antojo.\n\tMaldición (En fase expedición): El rival tira dos veces por turno durante el resto de la Fase de Expedición.\nEstatuilla de la salamandra:\n\tObtención: Los dados lanzados deben ser consecutivos. Por ejemplo: (1 y 2) (2 y 3) (9 y 10).\n\tBendición (En fase final): El portador de la estatuilla podrá ganar la fase final con una escalera de 4 dados consecutivos entre 5 dados lanzados.\n\tMaldición (En fase expedición): El rival juega con tres dados durante el resto de la Fase de Expedición.\n";
+            cout << reglas << endl;
+            cout << "Ingresar 0 para continuar o 1 para ver las caracteristicas de las estatuillas." << endl;
+            cin >> aux;
+        }
     } while(aux != 0);
 }
 
