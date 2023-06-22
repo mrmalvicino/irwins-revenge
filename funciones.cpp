@@ -22,33 +22,18 @@ void ingresar_cero_para_continuar(){
     } while(aux != 0);
 }
 
-bool array_contiene_numero(int arr[], int tam, int num){
-    // Determina si un numero se encuentra en un array.
-
-    bool rtn = false;
-
-    for(int i = 0; i < tam; i++){
-        if(arr[i] == num){
-            rtn = true;
-        }
-    }
-
-    return rtn;
-}
-
-void dibujar_dado(int valor_del_dado, int posicion){
+void dibujar_dado(int valor_del_dado, int posicion, int desfasaje_vertical){
     // Dibuja un dado de cierto valor. La posicion es un numero entero y varia horizontalmente.
 
     string const FONDO_DE_DADO = "█"; // MacOs
     string const PUNTO_DE_DADO = "░░"; // MacOs
     // string const FONDO_DE_DADO = char(219); // Windows
     // string const PUNTO_DE_DADO = "  "; // Windows
-    int const DESFASAJE_VERTICAL = 5;
     int const LARGO = 19;
     int const ALTO = 10;
-    int const FIL_1 = 2 + DESFASAJE_VERTICAL;
-    int const FIL_2 = 5 + DESFASAJE_VERTICAL;
-    int const FIL_3 = 8 + DESFASAJE_VERTICAL;
+    int const FIL_1 = 2 + desfasaje_vertical;
+    int const FIL_2 = 5 + desfasaje_vertical;
+    int const FIL_3 = 8 + desfasaje_vertical;
     int const COL_1 = 3;
     int const COL_2 = 9;
     int const COL_3 = 15;
@@ -56,7 +41,7 @@ void dibujar_dado(int valor_del_dado, int posicion){
 
     for(int x = 1; x < LARGO; x++){ // Dibujar cuadrado
         for(int y = 1; y < ALTO; y++){
-            rlutil::locate(x + LARGO * posicion, y + DESFASAJE_VERTICAL);
+            rlutil::locate(x + LARGO * posicion, y + desfasaje_vertical);
             cout << FONDO_DE_DADO << endl;
         }
     }
@@ -259,12 +244,12 @@ void dibujar_dado(int valor_del_dado, int posicion){
     }
 }
 
-void mostrar_dados(int dados[], int const CANT_DADOS, bool clear_cls){
+void mostrar_dados(int dados[], int const CANT_DADOS, bool clear_cls, int desfasaje_vertical){
     // Muestra los dados tirados que hay en un vector de dados.
 
     for(int i = 0; i < CANT_DADOS; i++){
         if(dados[i] != 0){
-            dibujar_dado(dados[i], i);
+            dibujar_dado(dados[i], i, desfasaje_vertical);
         }
     }
 
@@ -275,7 +260,51 @@ void mostrar_dados(int dados[], int const CANT_DADOS, bool clear_cls){
     }
 }
 
-int indice_max(int arr[], int const tam){
+int array_cuantos_repite(int arr[], int tam){
+    // Devuelve la cantidad de veces que se repite el entero que mas se repite en un array.
+
+    int rtn = 0;
+    int min = 1; // Valor del numero entero minimo del array.
+    int max = arr[indice_max(arr, tam)]; // Valor del numero entero maximo del array.
+
+    for(int i = min; i <= max; i++){
+        if(rtn < array_repite_numero(arr, tam, i)){
+            rtn = array_repite_numero(arr, tam, i);
+        }
+    }
+
+    return rtn;
+}
+
+int array_repite_numero(int arr[], int tam, int num){
+    // Devuelve la cantidad de veces que un entero se repite en un array.
+
+    int rtn = 0;
+
+    for(int i = 0; i < tam; i++){
+        if(arr[i] == num){
+            rtn += 1;
+        }
+    }
+
+    return rtn;
+}
+
+bool array_contiene_numero(int arr[], int tam, int num){
+    // Determina si un numero se encuentra en un array.
+
+    bool rtn = false;
+
+    for(int i = 0; i < tam; i++){
+        if(arr[i] == num){
+            rtn = true;
+        }
+    }
+
+    return rtn;
+}
+
+int indice_max(int arr[], int tam){
     // Devuelve el indice del componente maximo de un array.
 
     int max = arr[0];
@@ -458,7 +487,7 @@ bool fin_de_fase_fin(int dados_final[], int cant_dds, int turno_actual, int port
 
     if(gana_fase_fin == true){ // Informar ganador
         cout << "Gana la fase final con los dados:" << endl;
-        mostrar_dados(dados_final, CANT_DADOS_FINAL, true);
+        mostrar_dados(dados_final, CANT_DADOS_FINAL, true, 5);
     }
 
     return gana_fase_fin;
@@ -473,6 +502,7 @@ void fase_final(bool modo_aleatorio, string nombres_jugadores[], int const CANT_
     int const CARAS_MALDICION_CANGREJO = 10;
     int const DADOS_MALDICION_HORMIGA = 2;
     int const CARAS_MALDICION_HORMIGA = 10;
+    int const LINEAS_TERMINAL_FASE_FIN = 5;
     int dados_final[CANT_DADOS_FINAL] = {};
     int ganador_fase_fin;
     int puntos_maldicion_cangrejo = 0;
@@ -489,7 +519,7 @@ void fase_final(bool modo_aleatorio, string nombres_jugadores[], int const CANT_
         puntos_maldicion_cangrejo += dados_final[i];
     }
     
-    mostrar_dados(dados_final, DADOS_MALDICION_CANGREJO, true);
+    mostrar_dados(dados_final, DADOS_MALDICION_CANGREJO, true, LINEAS_TERMINAL_FASE_FIN);
 
     cout << nombres_jugadores[estatuillas[1] - 1] << " tiene la maldicion de la hormiga. " << nombres_jugadores[turno_nuevo(estatuillas[1], CANT_JUGADORES) - 1] << " tira " << DADOS_MALDICION_HORMIGA << " dados para descontarle puntaje a " << nombres_jugadores[estatuillas[1] - 1] << endl;
     
@@ -498,7 +528,7 @@ void fase_final(bool modo_aleatorio, string nombres_jugadores[], int const CANT_
         puntos_maldicion_hormiga += dados_final[i];
     }
 
-    mostrar_dados(dados_final, DADOS_MALDICION_HORMIGA, true);
+    mostrar_dados(dados_final, DADOS_MALDICION_HORMIGA, true, LINEAS_TERMINAL_FASE_FIN);
 
     do{
         cout << nombres_jugadores[estatuillas[1] - 1] << " tiene la bendicion de la hormiga. Elegir un numero del 1 al 6 para luego usar como reemplazo." << endl;
@@ -515,7 +545,7 @@ void fase_final(bool modo_aleatorio, string nombres_jugadores[], int const CANT_
             dados_final[i] = tirar_dado(CANT_CARAS_FINAL, modo_aleatorio);
         }
 
-        mostrar_dados(dados_final, CANT_DADOS_FINAL, false);
+        mostrar_dados(dados_final, CANT_DADOS_FINAL, false, LINEAS_TERMINAL_FASE_FIN);
 
         if(turno_actual == estatuillas[1]){ // Si tiene hormiga, puede elegir un dado y cambiarlo por el reemplazo
             do{
@@ -737,7 +767,7 @@ int jugador_inicial_exp(bool modo_aleatorio, string nombres_jugadores[], int con
         for(int i = 0; i < CANT_JUGADORES; i++){
             dados_lanz[i] = tirar_dado(10, modo_aleatorio);
             cout << nombres_jugadores[i] << " tira el dado:" << endl;
-            dibujar_dado(dados_lanz[i],0);
+            dibujar_dado(dados_lanz[i],0, 2);
             ingresar_cero_para_continuar();
             limpiar_terminal();
         }
@@ -778,6 +808,7 @@ void fase_expedicion(bool modo_aleatorio, string nombres_jugadores[], int const 
     int const CANT_CARAS_EXP = 10;
     int const TIROS_MALDICION_AGUILA = 2;
     int const TURNOS_MALDICION_MEDUSA = 3;
+    int const LINEAS_TERMINAL_FASE_EXP = 6;
     int intentos[CANT_JUGADORES][CANT_ESTATUILLAS]; // Matriz que contiene las veces que un jugador eligio una estatuilla como objetivo. Cada fila representa un jugador. Cada columna representa una estatuilla.
     int estatuillas[CANT_ESTATUILLAS] = {}; // Array que tiene en cada componente a quien pertenece la estatuilla o tiene cero si nadie la tiene.
     int objetivos[CANT_JUGADORES]; // Array que tiene el objetivo de cada jugador por turno. Entero mayor que cero.
@@ -794,9 +825,9 @@ void fase_expedicion(bool modo_aleatorio, string nombres_jugadores[], int const 
     }
 
     while(fin_de_fase_exp(estatuillas, CANT_ESTATUILLAS) == false){ // Mientras haya estatuillas disponibles, elegir objetivo y tirar dados
-        mostrar_inventario(nombres_jugadores, CANT_JUGADORES, estatuillas, CANT_ESTATUILLAS);
-
         for(int i = 0; i < CANT_JUGADORES; i++){ // Cada jugador elige un objetivo
+            mostrar_inventario(nombres_jugadores, CANT_JUGADORES, estatuillas, CANT_ESTATUILLAS);
+
             if(estatuillas[2] == turno_actual && turnos_perdidos < TURNOS_MALDICION_MEDUSA){ // Si el jugador tiene la medusa, no elige objetivo por 3 turnos
                 cout << nombres_jugadores[turno_actual - 1] << " tiene la maldicion de la medusa y pierde los siguientes " << TURNOS_MALDICION_MEDUSA - turnos_perdidos << " turnos."  << endl;
                 ingresar_cero_para_continuar();
@@ -812,6 +843,7 @@ void fase_expedicion(bool modo_aleatorio, string nombres_jugadores[], int const 
             }
 
             turno_actual = turno_nuevo(turno_actual, CANT_JUGADORES);
+            limpiar_terminal();
         }
 
         limpiar_terminal();
@@ -834,12 +866,15 @@ void fase_expedicion(bool modo_aleatorio, string nombres_jugadores[], int const 
             }
 
             for(int i = 0; i < tiros; i++){ // Hacer tantos tiros de tantos dados y guardar estatuilla si corresponde
+                mostrar_inventario(nombres_jugadores, CANT_JUGADORES, estatuillas, CANT_ESTATUILLAS);
+                cout << "Turno de " << nombres_jugadores[turno_actual - 1] << endl;
+
                 for(int i = 0; i < cant_dds_exp; i++){
                     dados_exp[i] = tirar_dado(CANT_CARAS_EXP, modo_aleatorio);
                 }
                 
                 cout << nombres_jugadores[turno_actual-1] << " tira los dados:" << endl;
-                mostrar_dados(dados_exp, cant_dds_exp, true);
+                mostrar_dados(dados_exp, cant_dds_exp, true, LINEAS_TERMINAL_FASE_EXP + array_cuantos_repite(estatuillas, CANT_ESTATUILLAS));
                 
                 if(estatuillas[objetivos[turno_actual - 1] - 1] == 0 && guardar_inventario(dados_exp, objetivos, CANT_ESTATUILLAS, turno_actual) == 1){
                     estatuillas[objetivos[turno_actual - 1] - 1] = turno_actual;
