@@ -3,8 +3,11 @@ using namespace std;
 #include "funciones.h"
 
 int main(){
+    int max_pdv = 0;
+    string max_jugador = "No se registran partidas";
+
     limpiar_terminal();
-    menu();
+    menu(max_pdv, max_jugador);
 }
 
 /*

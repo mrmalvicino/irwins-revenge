@@ -291,7 +291,7 @@ int indice_max(int arr[], int const tam){
     return indice;
 }
 
-void puntos_de_victoria(string nombres_jugadores[], int const CANT_JUGADORES, int estatuillas[], int const CANT_ESTATUILLAS, int ganador_fase_fin, int intentos[][5], int puntos_maldicion_cangrejo, int puntos_maldicion_hormiga){
+void puntos_de_victoria(string nombres_jugadores[], int const CANT_JUGADORES, int estatuillas[], int const CANT_ESTATUILLAS, int ganador_fase_fin, int intentos[][5], int puntos_maldicion_cangrejo, int puntos_maldicion_hormiga, int& max_pdv, string& max_jugador){
     // Suma los puntos de victoria para determinar el ganador.
 
     int const PDV_POR_ESTAT = 5;
@@ -367,10 +367,15 @@ void puntos_de_victoria(string nombres_jugadores[], int const CANT_JUGADORES, in
         cout << nombres_jugadores[i] << " obtuvo " << pts_de_vic[i] << " puntos de victoria." << endl;
     }
 
+    if(max_pdv < pts_de_vic[indice_max(pts_de_vic, CANT_JUGADORES)]){
+        max_pdv = pts_de_vic[indice_max(pts_de_vic, CANT_JUGADORES)];
+        max_jugador = nombres_jugadores[indice_max(pts_de_vic, CANT_JUGADORES)];
+    }
+
     cout << endl << nombres_jugadores[indice_max(pts_de_vic, CANT_JUGADORES)] << " gana!" << endl;
     ingresar_cero_para_continuar();
     limpiar_terminal();
-    menu();
+    menu(max_pdv, max_jugador);
 }
 
 int jugador_inicial_final(int estatuillas[], int const CANT_ESTATUILLAS, int const CANT_JUGADORES){
@@ -459,7 +464,7 @@ bool fin_de_fase_fin(int dados_final[], int cant_dds, int turno_actual, int port
     return gana_fase_fin;
 }
 
-void fase_final(string nombres_jugadores[], int const CANT_JUGADORES, int estatuillas[], int const CANT_ESTATUILLAS, int intentos[][5]){ // Dimension hardcodeada para no usar constantes globales
+void fase_final(string nombres_jugadores[], int const CANT_JUGADORES, int estatuillas[], int const CANT_ESTATUILLAS, int intentos[][5], int& max_pdv, string& max_jugador){ // Dimension de matriz hardcodeada para no usar constantes globales
     // Jugar fase final.
     
     int const CANT_DADOS_FINAL = 5;
@@ -560,7 +565,7 @@ void fase_final(string nombres_jugadores[], int const CANT_JUGADORES, int estatu
         }
     } while(fin_de_fase_fin(dados_final, CANT_DADOS_FINAL, ganador_fase_fin, estatuillas[2], estatuillas[4]) == false);
 
-    puntos_de_victoria(nombres_jugadores, CANT_JUGADORES, estatuillas, CANT_ESTATUILLAS, ganador_fase_fin, intentos, puntos_maldicion_cangrejo, puntos_maldicion_hormiga);
+    puntos_de_victoria(nombres_jugadores, CANT_JUGADORES, estatuillas, CANT_ESTATUILLAS, ganador_fase_fin, intentos, puntos_maldicion_cangrejo, puntos_maldicion_hormiga, max_pdv, max_jugador);
 }
 
 bool arena_cangrejo(int dado1, int dado2, int dado3){
@@ -755,7 +760,7 @@ bool fin_de_fase_exp(int estatuillas[], int const CANT_ESTATUILLAS){
     return rtn;
 }
 
-void fase_expedicion(string nombres_jugadores[], int const CANT_JUGADORES){
+void fase_expedicion(string nombres_jugadores[], int const CANT_JUGADORES, int& max_pdv, string& max_jugador){
     // Jugar fase de expedicion.
 
     int const CANT_ESTATUILLAS = 5;
@@ -764,7 +769,7 @@ void fase_expedicion(string nombres_jugadores[], int const CANT_JUGADORES){
     int const TIROS_MALDICION_AGUILA = 2;
     int const TURNOS_MALDICION_MEDUSA = 3;
     int intentos[CANT_JUGADORES][CANT_ESTATUILLAS]; // Matriz que contiene las veces que un jugador eligio una estatuilla como objetivo. Cada fila representa un jugador. Cada columna representa una estatuilla.
-    int estatuillas[CANT_ESTATUILLAS] = {}; // Array que tiene en cada componente a quien pertenece la estatuilla o tiene cero si nadie la tiene.
+    int estatuillas[CANT_ESTATUILLAS] = {1,1,1,2,2}; // Array que tiene en cada componente a quien pertenece la estatuilla o tiene cero si nadie la tiene.
     int objetivos[CANT_JUGADORES]; // Array que tiene el objetivo de cada jugador por turno. Entero mayor que cero.
     int dados_exp[CANT_DADOS_EXP]; // Array de dados usados en fase de expedicion. Si el tercer dado no se usa, este debe valer cero.
     int turnos_perdidos = 0;
@@ -831,10 +836,10 @@ void fase_expedicion(string nombres_jugadores[], int const CANT_JUGADORES){
         }
     }
 
-    fase_final(nombres_jugadores, CANT_JUGADORES, estatuillas, CANT_ESTATUILLAS, intentos);
+    fase_final(nombres_jugadores, CANT_JUGADORES, estatuillas, CANT_ESTATUILLAS, intentos, max_pdv, max_jugador);
 }
 
-void menu_jugar(int const CANT_JUGADORES){
+void menu_jugar(int const CANT_JUGADORES, int& max_pdv, string& max_jugador){
     // Iniciar nueva partida.
 
     string nombres_jugadores[CANT_JUGADORES];
@@ -846,20 +851,20 @@ void menu_jugar(int const CANT_JUGADORES){
         getline(cin, nombres_jugadores[i]);
     }
 
-    fase_expedicion(nombres_jugadores, CANT_JUGADORES);
+    fase_expedicion(nombres_jugadores, CANT_JUGADORES, max_pdv, max_jugador);
 }
 
-void menu_estadisticas(int max_pdv, string max_pdv_jugador){
+void menu_estadisticas(int max_pdv, string max_jugador){
     // Mostrar el jugador que mayor puntos de victoria haya obtenido.
 
     limpiar_terminal();
-    cout << max_pdv_jugador << ":\t" << max_pdv << " PDV" << endl;
+    cout << max_jugador << ":\t" << max_pdv << " PDV" << endl;
     ingresar_cero_para_continuar();
     limpiar_terminal();
-    menu();
+    menu(max_pdv, max_jugador);
 }
 
-void menu_creditos(){
+void menu_creditos(int max_pdv, string max_jugador){
     // Opcion del menu.
 
     limpiar_terminal();
@@ -869,15 +874,13 @@ void menu_creditos(){
     cout << "- Serman, Guido (Legajo 28842)" << endl << endl;
     ingresar_cero_para_continuar();
     limpiar_terminal();
-    menu();
+    menu(max_pdv, max_jugador);
 }
 
-void menu(){
+void menu(int& max_pdv, string& max_jugador){
     // Menu principal.
 
     int const CANT_JUGADORES = 2;
-    int max_pdv = 0;
-    string max_pdv_jugador = "Todavia no se registran partidas";
 
     int seleccion;
     cout << "-----------------------" << endl;
@@ -898,13 +901,13 @@ void menu(){
         case 0:
             break;
         case 1:
-            menu_jugar(CANT_JUGADORES);
+            menu_jugar(CANT_JUGADORES, max_pdv, max_jugador);
             break;
         case 2:
-            menu_estadisticas(max_pdv, max_pdv_jugador);
+            menu_estadisticas(max_pdv, max_jugador);
             break;
         case 3:
-            menu_creditos();
+            menu_creditos(max_pdv, max_jugador);
             break;
     }
 }
