@@ -7,8 +7,8 @@ using namespace std;
 void limpiar_terminal(){
     // Limpia la terminal.
 
-    //system("clear"); // MacOs
-      system("cls"); // Windows
+    system("clear"); // MacOs
+    // system("cls"); // Windows
 }
 
 void pausar_terminal(){
@@ -25,10 +25,10 @@ void pausar_terminal(){
 void dibujar_dado(int valor_del_dado, int posicion, int desfasaje_vertical){
     // Dibuja un dado de cierto valor. La posicion es un numero entero y varia horizontalmente.
 
-    //string const FONDO_DE_DADO = "█"; // MacOs
-    //string const PUNTO_DE_DADO = "░░"; // MacOs
-    char const FONDO_DE_DADO = char(219); // Windows
-    string const PUNTO_DE_DADO = "  "; // Windows
+    string const FONDO_DE_DADO = "█"; // MacOs
+    string const PUNTO_DE_DADO = "░░"; // MacOs
+    // char const FONDO_DE_DADO = char(219); // Windows
+    // string const PUNTO_DE_DADO = "  "; // Windows
     int const LARGO = 19;
     int const ALTO = 10;
     int const FIL_1 = 2 + desfasaje_vertical;
@@ -318,7 +318,7 @@ int indice_max(int arr[], int tam){
     return indice;
 }
 
-void puntos_de_victoria(string nombres_jugadores[], int const CANT_JUGADORES, int estatuillas[], int const CANT_ESTATUILLAS, int ganador_fase_fin, int intentos[][5], int puntos_maldicion_cangrejo, int puntos_maldicion_hormiga, int& max_pdv, string& max_jugador){
+void puntos_de_victoria(string nombres_jugadores[], int const CANT_JUGADORES, int estatuillas[], int const CANT_ESTATUILLAS, int ganador_fase_fin, int intentos[][5], int puntos_maldicion_cangrejo, int puntos_maldicion_hormiga, int& max_pdv, string& max_jugador, int orden_ests[]){
     // Suma los puntos de victoria para determinar el ganador.
 
     int const PDV_POR_ESTAT = 5;
@@ -387,9 +387,19 @@ void puntos_de_victoria(string nombres_jugadores[], int const CANT_JUGADORES, in
         }
     }
 
-    for(int i = 0; i < CANT_HITOS; i ++){
+    for(int i = 0; i < CANT_HITOS; i ++){ // SUMATORIA
         for(int j = 0; j < CANT_JUGADORES; j ++){
           pts_de_vic[j] += hitos[i][j];
+        }
+    }
+
+    cout << "Orden de obtencion de estatuillas:" << endl;
+
+    for(int i = 0; i < CANT_ESTATUILLAS; i ++){ // ORDEN
+        if(i == 4){
+            cout << nombre_de_estatuilla(i, CANT_ESTATUILLAS) << "\t" << orden_ests[i] << " °" << endl << endl;
+        } else{
+            cout << nombre_de_estatuilla(i, CANT_ESTATUILLAS) << "\t\t" << orden_ests[i] << " °" << endl;
         }
     }
 
@@ -504,7 +514,7 @@ bool fin_de_fase_fin(int dados_final[], int cant_dds, int turno_actual, int port
     return gana_fase_fin;
 }
 
-void fase_final(bool modo_aleatorio, string nombres_jugadores[], int const CANT_JUGADORES, int estatuillas[], int const CANT_ESTATUILLAS, int intentos[][5], int& max_pdv, string& max_jugador){ // Dimension de matriz hardcodeada para no usar constantes globales
+void fase_final(bool modo_aleatorio, string nombres_jugadores[], int const CANT_JUGADORES, int estatuillas[], int const CANT_ESTATUILLAS, int intentos[][5], int& max_pdv, string& max_jugador, int orden_ests[]){ // Dimension de matriz hardcodeada para no usar constantes globales
     // Jugar fase final.
 
     int const CANT_DADOS_FINAL = 5;
@@ -609,7 +619,7 @@ void fase_final(bool modo_aleatorio, string nombres_jugadores[], int const CANT_
         }
     } while(fin_de_fase_fin(dados_final, CANT_DADOS_FINAL, ganador_fase_fin, estatuillas[2], estatuillas[4]) == false);
 
-    puntos_de_victoria(nombres_jugadores, CANT_JUGADORES, estatuillas, CANT_ESTATUILLAS, ganador_fase_fin, intentos, puntos_maldicion_cangrejo, puntos_maldicion_hormiga, max_pdv, max_jugador);
+    puntos_de_victoria(nombres_jugadores, CANT_JUGADORES, estatuillas, CANT_ESTATUILLAS, ganador_fase_fin, intentos, puntos_maldicion_cangrejo, puntos_maldicion_hormiga, max_pdv, max_jugador, orden_ests);
 }
 
 bool arena_cangrejo(int dado1, int dado2, int dado3){
@@ -845,8 +855,10 @@ void fase_expedicion(bool modo_aleatorio, string nombres_jugadores[], int const 
     int const LINEAS_TERMINAL_FASE_EXP = 5;
     int intentos[CANT_JUGADORES][CANT_ESTATUILLAS]; // Matriz que contiene las veces que un jugador eligio una estatuilla como objetivo. Cada fila representa un jugador. Cada columna representa una estatuilla.
     int estatuillas[CANT_ESTATUILLAS] = {}; // Array que tiene en cada componente a quien pertenece la estatuilla o tiene cero si nadie la tiene.
+    int orden_ests[CANT_ESTATUILLAS] = {}; // Array que tiene en cada componente el lugasr en que cada estatuilla fue obtenida.
     int objetivos[CANT_JUGADORES]; // Array que tiene el objetivo de cada jugador por turno. Entero mayor que cero.
     int dados_exp[CANT_DADOS_EXP]; // Array de dados usados en fase de expedicion. Si el tercer dado no se usa, este debe valer cero.
+    int ests_obtenidas = 0; // Numero ordinal para asignar al vector de orden a medida que se obtienen las estatuillas.
     int cant_dds_exp; // Cantidad de dados que le corresponde tirar a un jugador segun el rival tenga o no la salamandra.
     int turnos_perdidos = 0;
     int tiros;
@@ -912,6 +924,8 @@ void fase_expedicion(bool modo_aleatorio, string nombres_jugadores[], int const 
 
                 if(estatuillas[objetivos[turno_actual - 1] - 1] == 0 && guardar_inventario(dados_exp, objetivos, CANT_ESTATUILLAS, turno_actual) == 1){
                     estatuillas[objetivos[turno_actual - 1] - 1] = turno_actual;
+                    ests_obtenidas ++;
+                    orden_ests[objetivos[turno_actual - 1] - 1] = ests_obtenidas;
                 }
             }
 
@@ -919,7 +933,7 @@ void fase_expedicion(bool modo_aleatorio, string nombres_jugadores[], int const 
         }
     }
 
-    fase_final(modo_aleatorio, nombres_jugadores, CANT_JUGADORES, estatuillas, CANT_ESTATUILLAS, intentos, max_pdv, max_jugador);
+    fase_final(modo_aleatorio, nombres_jugadores, CANT_JUGADORES, estatuillas, CANT_ESTATUILLAS, intentos, max_pdv, max_jugador, orden_ests);
 }
 
 void menu_jugar(int const CANT_JUGADORES, int& max_pdv, string& max_jugador){
