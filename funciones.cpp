@@ -262,7 +262,7 @@ void dibujar_dado(int valor_del_dado, int posicion, int desfasaje_vertical){
 void mostrar_dados(int dados[], int const CANT_DADOS, bool clear_cls, int desfasaje_vertical){
     // Muestra los dados tirados que hay en un vector de dados.
 
-    for(int i = 0; i < CANT_DADOS; i++){
+    for(int i = 0; i < CANT_DADOS; i ++){
         if(dados[i] != 0){
             dibujar_dado(dados[i], i, desfasaje_vertical);
         }
@@ -275,14 +275,28 @@ void mostrar_dados(int dados[], int const CANT_DADOS, bool clear_cls, int desfas
     }
 }
 
-int array_cuantos_repite(int arr[], int tam){
+int cant_positivos_array(int arr[], int tam){
+    // Devuelve la cantidad de elementos positivos de un array.
+
+    int rtn = 0;
+
+    for(int i = 0; i < tam; i ++){
+        if(0 < arr[i]){
+            rtn ++;
+        }
+    }
+
+    return rtn;
+}
+/*
+int array_cuantos_repite(int arr[], int tam){ // No se usa
     // Devuelve la cantidad de veces que se repite el entero que mas se repite en un array.
 
     int rtn = 0;
     int min = 1; // Valor del numero entero minimo del array.
     int max = arr[indice_max(arr, tam)]; // Valor del numero entero maximo del array.
 
-    for(int i = min; i <= max; i++){
+    for(int i = min; i <= max; i ++){
         if(rtn < array_repite_numero(arr, tam, i)){
             rtn = array_repite_numero(arr, tam, i);
         }
@@ -291,12 +305,12 @@ int array_cuantos_repite(int arr[], int tam){
     return rtn;
 }
 
-int array_repite_numero(int arr[], int tam, int num){
+int array_repite_numero(int arr[], int tam, int num){ // No se usa
     // Devuelve la cantidad de veces que un entero se repite en un array.
 
     int rtn = 0;
 
-    for(int i = 0; i < tam; i++){
+    for(int i = 0; i < tam; i ++){
         if(arr[i] == num){
             rtn += 1;
         }
@@ -304,13 +318,13 @@ int array_repite_numero(int arr[], int tam, int num){
 
     return rtn;
 }
-
+*/
 bool array_contiene_numero(int arr[], int tam, int num){
     // Determina si un numero se encuentra en un array.
 
     bool rtn = false;
 
-    for(int i = 0; i < tam; i++){
+    for(int i = 0; i < tam; i ++){
         if(arr[i] == num){
             rtn = true;
         }
@@ -325,7 +339,7 @@ int indice_max(int arr[], int tam){
     int max = arr[0];
     int indice = 0;
 
-    for(int i = 1; i < tam; i++){
+    for(int i = 1; i < tam; i ++){
         if(max < arr[i]){
             max = arr[i];
             indice = i;
@@ -346,7 +360,7 @@ void puntos_de_victoria(string nombres_jugadores[], int const CANT_JUGADORES, in
     int const PDV_POR_LANZAM = 1;
     int pts_de_vic[CANT_JUGADORES]; // Array acumulador de puntos. Cada componente tiene los puntos de cada jugador.
 
-    for(int i = 0; i < CANT_JUGADORES; i++){
+    for(int i = 0; i < CANT_JUGADORES; i ++){
         pts_de_vic[i] = 0;
     }
 
@@ -356,12 +370,12 @@ void puntos_de_victoria(string nombres_jugadores[], int const CANT_JUGADORES, in
     pts_de_vic[estatuillas[1] - 1] -= puntos_maldicion_hormiga;
     cout << nombres_jugadores[estatuillas[1] - 1] << " perdio " << puntos_maldicion_hormiga << " puntos por tener la maldicion de la hormiga." << endl;
 
-    for(int i = 0; i < CANT_ESTATUILLAS; i++){ // OBTIENE ESTATUILLA
+    for(int i = 0; i < CANT_ESTATUILLAS; i ++){ // OBTIENE ESTATUILLA
         pts_de_vic[estatuillas[i] - 1] += PDV_POR_ESTAT;
         cout << nombres_jugadores[estatuillas[i] - 1] << " gana " << PDV_POR_ESTAT << " puntos por haber obtenido la estatuilla de " << nombre_de_estatuilla(i, CANT_ESTATUILLAS) << "." << endl;
     }
 
-    for(int i = 0; i < CANT_JUGADORES; i++){ // OBTIENE ESTATUILLA EN PRIMER INTENTO
+    for(int i = 0; i < CANT_JUGADORES; i ++){ // OBTIENE ESTATUILLA EN PRIMER INTENTO
         for(int j = 0; j < CANT_ESTATUILLAS; j++){
             if(intentos[i][j] == 1 && estatuillas[j] == i + 1){
                 pts_de_vic[i] += PDV_POR_EST_PP;
@@ -373,7 +387,7 @@ void puntos_de_victoria(string nombres_jugadores[], int const CANT_JUGADORES, in
     pts_de_vic[ganador_fase_fin - 1] += PDV_POR_GANADOR; // GANADOR FASE FINAL
     cout << nombres_jugadores[ganador_fase_fin - 1] << " gana " << PDV_POR_GANADOR << " puntos por haber ganado la fase final." << endl;
 
-    for(int i = 0; i < CANT_JUGADORES; i++){ // GANADOR FASE FINAL SIN ESTATUILLAS
+    for(int i = 0; i < CANT_JUGADORES; i ++){ // GANADOR FASE FINAL SIN ESTATUILLAS
         bool gano_sin_ests = true;
         
         for(int j = 0; j < CANT_ESTATUILLAS; j++){
@@ -388,7 +402,7 @@ void puntos_de_victoria(string nombres_jugadores[], int const CANT_JUGADORES, in
         }
     }
 
-    for(int i = 0; i < CANT_JUGADORES; i++){ // RIVAL OBTIENE ESTATUILLA
+    for(int i = 0; i < CANT_JUGADORES; i ++){ // RIVAL OBTIENE ESTATUILLA
         for(int j = 0; j < CANT_ESTATUILLAS; j++){
             if(estatuillas[j] != i + 1){
                 pts_de_vic[i] -= PDV_POR_EST_RIVAL;
@@ -397,14 +411,14 @@ void puntos_de_victoria(string nombres_jugadores[], int const CANT_JUGADORES, in
         }
     }
 
-    for(int i = 0; i < CANT_JUGADORES; i++){ // LANZADOR FASE FINAL
+    for(int i = 0; i < CANT_JUGADORES; i ++){ // LANZADOR FASE FINAL
         if(jugador_inicial_final(estatuillas, CANT_ESTATUILLAS, CANT_JUGADORES) == i + 1){
             pts_de_vic[i] -= PDV_POR_LANZAM;
             cout << nombres_jugadores[i] << " pierde " << PDV_POR_LANZAM << " punto por haber lanzado en fase final." << endl;
         }
     }
 
-    for(int i = 0; i < CANT_JUGADORES; i++){
+    for(int i = 0; i < CANT_JUGADORES; i ++){
         if(pts_de_vic[i] < 0){
             pts_de_vic[i] = 0;
         }
@@ -428,7 +442,7 @@ int jugador_inicial_final(int estatuillas[], int const CANT_ESTATUILLAS, int con
     int jugador_inicial = 1;
     int contador_ests = 0;
 
-    for(int i = 0; i < CANT_ESTATUILLAS; i++){
+    for(int i = 0; i < CANT_ESTATUILLAS; i ++){
         if(estatuillas[i] == jugador_inicial){
             contador_ests ++;
         }
@@ -452,11 +466,11 @@ bool fin_de_fase_fin(int dados_final[], int cant_dds, int turno_actual, int port
     int aux;
     int dados_ordenados[CANT_DADOS_FINAL];
 
-    for(int i = 0; i < CANT_DADOS_FINAL; i++){ // Copiar vector de dados para ser ordenado
+    for(int i = 0; i < CANT_DADOS_FINAL; i ++){ // Copiar vector de dados para ser ordenado
         dados_ordenados[i] = dados_final[i];
     }
 
-    for(int i = 0; i < CANT_DADOS_FINAL; i++){ // Ordenar de menor a mayor
+    for(int i = 0; i < CANT_DADOS_FINAL; i ++){ // Ordenar de menor a mayor
         for(int j = 0; j < CANT_DADOS_FINAL - 1; j++){
             if(dados_ordenados[j+1] < dados_ordenados[j]){
                 aux = dados_ordenados[j+1];
@@ -468,7 +482,7 @@ bool fin_de_fase_fin(int dados_final[], int cant_dds, int turno_actual, int port
 
     if(turno_actual == portador_de_salamandra){ // Si tiene salamandra, mover el primer dado duplicado al final del array
         vueltas_sin_dar = 1;
-        for(int i = 0; i < CANT_DADOS_FINAL - 1; i++){
+        for(int i = 0; i < CANT_DADOS_FINAL - 1; i ++){
             if(dados_ordenados[i] == dados_ordenados[i+1]){
                 for(int j = i; j < CANT_DADOS_FINAL - i; j++){
                     dados_ordenados[j+1] = dados_ordenados[j+2];
@@ -479,7 +493,7 @@ bool fin_de_fase_fin(int dados_final[], int cant_dds, int turno_actual, int port
         }
     }
 
-    for(int i = 0; i < CANT_DADOS_FINAL - 1 - vueltas_sin_dar; i++){ // Gana por escalera
+    for(int i = 0; i < CANT_DADOS_FINAL - 1 - vueltas_sin_dar; i ++){ // Gana por escalera
         if(dados_ordenados[i] + 1 != dados_ordenados[i+1]){
             gana_por_escalera = false;
         }
@@ -487,7 +501,7 @@ bool fin_de_fase_fin(int dados_final[], int cant_dds, int turno_actual, int port
 
     if(turno_actual == portador_de_medusa){ // Gana por medusa
         gana_por_medusa = true;
-        for(int i = 0; i < CANT_DADOS_FINAL - 1; i++){
+        for(int i = 0; i < CANT_DADOS_FINAL - 1; i ++){
             if(dados_ordenados[i] != dados_ordenados[i+1]){
                 gana_por_medusa = false;
             }
@@ -529,7 +543,7 @@ void fase_final(bool modo_aleatorio, string nombres_jugadores[], int const CANT_
 
     cout << nombres_jugadores[estatuillas[0] - 1] << " tiene la maldicion del cangrejo. " << nombres_jugadores[turno_nuevo(estatuillas[0], CANT_JUGADORES) - 1] << " tira " << DADOS_MALDICION_CANGREJO << " dado para descontarle puntaje a " << nombres_jugadores[estatuillas[0] - 1] << endl;
     
-    for(int i = 0; i < DADOS_MALDICION_CANGREJO; i++){
+    for(int i = 0; i < DADOS_MALDICION_CANGREJO; i ++){
         dados_final[i] = tirar_dado(CARAS_MALDICION_CANGREJO, modo_aleatorio);
         puntos_maldicion_cangrejo += dados_final[i];
     }
@@ -538,7 +552,7 @@ void fase_final(bool modo_aleatorio, string nombres_jugadores[], int const CANT_
 
     cout << nombres_jugadores[estatuillas[1] - 1] << " tiene la maldicion de la hormiga. " << nombres_jugadores[turno_nuevo(estatuillas[1], CANT_JUGADORES) - 1] << " tira " << DADOS_MALDICION_HORMIGA << " dados para descontarle puntaje a " << nombres_jugadores[estatuillas[1] - 1] << endl;
     
-    for(int i = 0; i < DADOS_MALDICION_HORMIGA; i++){
+    for(int i = 0; i < DADOS_MALDICION_HORMIGA; i ++){
         dados_final[i] = tirar_dado(CARAS_MALDICION_HORMIGA, modo_aleatorio);
         puntos_maldicion_hormiga += dados_final[i];
     }
@@ -559,11 +573,11 @@ void fase_final(bool modo_aleatorio, string nombres_jugadores[], int const CANT_
         mostrar_inventario(nombres_jugadores, CANT_JUGADORES, estatuillas, CANT_ESTATUILLAS);
         cout << "Turno de " << nombres_jugadores[turno_actual - 1] << endl << endl;
 
-        for(int i = 0; i < CANT_DADOS_FINAL; i++){ // Cada jugador tira los dados
+        for(int i = 0; i < CANT_DADOS_FINAL; i ++){ // Cada jugador tira los dados
             dados_final[i] = tirar_dado(CANT_CARAS_FINAL, modo_aleatorio);
         }
 
-        mostrar_dados(dados_final, CANT_DADOS_FINAL, false, LINEAS_TERMINAL_FASE_FIN + array_cuantos_repite(estatuillas, CANT_ESTATUILLAS));
+        mostrar_dados(dados_final, CANT_DADOS_FINAL, false, LINEAS_TERMINAL_FASE_FIN + cant_positivos_array(estatuillas, CANT_ESTATUILLAS));
 
         if(turno_actual == estatuillas[1]){ // Si tiene hormiga, puede elegir un dado y cambiarlo por el reemplazo
             do{
@@ -573,7 +587,7 @@ void fase_final(bool modo_aleatorio, string nombres_jugadores[], int const CANT_
             } while(array_contiene_numero(dados_final, CANT_DADOS_FINAL, cambio_dado) == false && cambio_dado != 0);
 
             if(cambio_dado != 0){
-                for(int i = 0; i < CANT_DADOS_FINAL; i++){
+                for(int i = 0; i < CANT_DADOS_FINAL; i ++){
                     if(dados_final[i] == cambio_dado){
                         dados_final[i] = reemplazo_hormiga;
                         i = CANT_DADOS_FINAL;
@@ -589,7 +603,7 @@ void fase_final(bool modo_aleatorio, string nombres_jugadores[], int const CANT_
             } while(array_contiene_numero(dados_final, CANT_DADOS_FINAL, cambio_dado) == false && cambio_dado != 0);
 
             if(cambio_dado != 0){
-                for(int i = 0; i < CANT_DADOS_FINAL; i++){
+                for(int i = 0; i < CANT_DADOS_FINAL; i ++){
                     if(dados_final[i] == cambio_dado){
                         do{
                             cout << "ingresar nuevo valor para el dado " << dados_final[i] << ":" << endl;
@@ -621,8 +635,14 @@ bool arena_cangrejo(int dado1, int dado2, int dado3){
 
     bool rtn = true;
 
-    if( (dado1 % 2 == 0 && dado2 % 2 == 0 && dado3 % 2 == 0 && 0 < dado3) || (dado1 % 2 != 0 && dado2 % 2 != 0 && dado3 % 2 != 0 && 0 < dado3) ){
-        rtn = false;
+    if(dado3 == 0){
+        if( (dado1 % 2 == 0 && dado2 % 2 == 0) || (dado1 % 2 != 0 && dado2 % 2 != 0) ){
+            rtn = false;
+        }
+    } else{
+        if( (dado1 % 2 == 0 && dado2 % 2 == 0 && dado3 % 2 == 0) || (dado1 % 2 != 0 && dado2 % 2 != 0 && dado3 % 2 != 0) ){
+            rtn = false;
+        }
     }
 
     return rtn;
@@ -728,7 +748,7 @@ string nombre_de_estatuilla(int numero_de_estat, int const CANT_ESTATUILLAS){
 void mostrar_inventario(string nombres_jugadores[], int const CANT_JUGADORES, int estatuillas[], int const CANT_ESTATUILLAS){
     // Muestra las estatuillas adquiridas por cada jugador hasta el momento.
 
-    for(int i = 0; i < CANT_JUGADORES; i++){
+    for(int i = 0; i < CANT_JUGADORES; i ++){
         cout << "Inventario de " << nombres_jugadores[i] << ":" << endl;
 
         for(int j = 0; j < CANT_ESTATUILLAS; j++){
@@ -746,7 +766,7 @@ void elegir_estatuillas_disponibles(int estatuillas[], int const CANT_ESTATUILLA
 
     cout << "Elegir estatuilla objetivo:" << endl;
 
-    for(int i = 0; i < CANT_ESTATUILLAS; i++){
+    for(int i = 0; i < CANT_ESTATUILLAS; i ++){
         if(estatuillas[i] == 0){
             cout << i + 1 << " - Estatuilla de " << nombre_de_estatuilla(i, CANT_ESTATUILLAS) << endl;
         }
@@ -781,7 +801,7 @@ int jugador_inicial_exp(bool modo_aleatorio, string nombres_jugadores[], int con
 
     while(dados_lanz[0] == dados_lanz[1]){
         limpiar_terminal();
-        for(int i = 0; i < CANT_JUGADORES; i++){
+        for(int i = 0; i < CANT_JUGADORES; i ++){
             dados_lanz[i] = tirar_dado(10, modo_aleatorio);
             cout << nombres_jugadores[i] << " tira el dado:" << endl;
             dibujar_dado(dados_lanz[i],0, 2);
@@ -808,7 +828,7 @@ bool fin_de_fase_exp(int estatuillas[], int const CANT_ESTATUILLAS){
 
     bool rtn = true;
 
-    for(int i = 0; i < CANT_ESTATUILLAS; i++){
+    for(int i = 0; i < CANT_ESTATUILLAS; i ++){
         if(estatuillas[i] == 0){
             rtn = false;
         }
@@ -835,14 +855,14 @@ void fase_expedicion(bool modo_aleatorio, string nombres_jugadores[], int const 
     int tiros;
     int turno_actual = jugador_inicial_exp(modo_aleatorio, nombres_jugadores, CANT_JUGADORES); // Numero de jugador al que le corresponde el turno. Entero mayor que cero.
 
-    for(int i = 0; i < CANT_JUGADORES; i++){
+    for(int i = 0; i < CANT_JUGADORES; i ++){
         for(int j = 0; j < CANT_ESTATUILLAS; j++){
             intentos[i][j] = 0;
         }
     }
 
     while(fin_de_fase_exp(estatuillas, CANT_ESTATUILLAS) == false){ // Mientras haya estatuillas disponibles, elegir objetivo y tirar dados
-        for(int i = 0; i < CANT_JUGADORES; i++){ // Cada jugador elige un objetivo
+        for(int i = 0; i < CANT_JUGADORES; i ++){ // Cada jugador elige un objetivo
             mostrar_inventario(nombres_jugadores, CANT_JUGADORES, estatuillas, CANT_ESTATUILLAS);
 
             if(estatuillas[2] == turno_actual && turnos_perdidos < TURNOS_MALDICION_MEDUSA){ // Si el jugador tiene la medusa, no elige objetivo por 3 turnos
@@ -865,7 +885,7 @@ void fase_expedicion(bool modo_aleatorio, string nombres_jugadores[], int const 
 
         limpiar_terminal();
 
-        for(int i = 0; i < CANT_JUGADORES; i++){ // Cada jugador tira los dados
+        for(int i = 0; i < CANT_JUGADORES; i ++){ // Cada jugador tira los dados
             if(estatuillas[2] == turno_actual && turnos_perdidos < TURNOS_MALDICION_MEDUSA){ // Si el jugador tiene la medusa, no tira por 3 turnos
                 tiros = 0;
                 turnos_perdidos ++;
@@ -882,16 +902,16 @@ void fase_expedicion(bool modo_aleatorio, string nombres_jugadores[], int const 
                 cant_dds_exp = CANT_DADOS_EXP;
             }
 
-            for(int i = 0; i < tiros; i++){ // Hacer tantos tiros de tantos dados y guardar estatuilla si corresponde
+            for(int i = 0; i < tiros; i ++){ // Hacer tantos tiros de tantos dados y guardar estatuilla si corresponde
                 mostrar_inventario(nombres_jugadores, CANT_JUGADORES, estatuillas, CANT_ESTATUILLAS);
                 cout << "Turno de " << nombres_jugadores[turno_actual - 1] << endl << endl;
 
-                for(int i = 0; i < cant_dds_exp; i++){
+                for(int i = 0; i < cant_dds_exp; i ++){
                     dados_exp[i] = tirar_dado(CANT_CARAS_EXP, modo_aleatorio);
                 }
                 
                 cout << nombres_jugadores[turno_actual-1] << " tira los dados:" << endl;
-                mostrar_dados(dados_exp, cant_dds_exp, true, LINEAS_TERMINAL_FASE_EXP + array_cuantos_repite(estatuillas, CANT_ESTATUILLAS));
+                mostrar_dados(dados_exp, cant_dds_exp, true, LINEAS_TERMINAL_FASE_EXP + cant_positivos_array(estatuillas, CANT_ESTATUILLAS));
                 
                 if(estatuillas[objetivos[turno_actual - 1] - 1] == 0 && guardar_inventario(dados_exp, objetivos, CANT_ESTATUILLAS, turno_actual) == 1){
                     estatuillas[objetivos[turno_actual - 1] - 1] = turno_actual;
@@ -914,7 +934,7 @@ void menu_jugar(int const CANT_JUGADORES, int& max_pdv, string& max_jugador){
     limpiar_terminal();
     cin.ignore(); // Ignora el enter de cin >> seleccion en menu();
 
-    for(int i = 0; i < CANT_JUGADORES; i++){
+    for(int i = 0; i < CANT_JUGADORES; i ++){
         cout << "Ingrese nombre del jugador " << i + 1 << ":" << endl;
         getline(cin, nombres_jugadores[i]);
     }
