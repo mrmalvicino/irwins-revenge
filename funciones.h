@@ -1,3 +1,6 @@
+#ifndef FUNCIONES_H
+#define FUNCIONES_H
+
 #include <iostream>
 using namespace std;
 
@@ -30,3 +33,5 @@ void menu_jugar(int const CANT_JUGADORES, int& max_pdv, string& max_jugador);
 void menu_estadisticas(int max_pdv, string max_jugador);
 void menu_creditos(int max_pdv, string max_jugador);
 void menu(int& max_pdv, string& max_jugador);
+
+#endif // FUNCIONES_H
